@@ -73,12 +73,12 @@ class Account extends CI_Controller {
     		$this->load->library('form_validation');
     	    $this->form_validation->set_rules('username', 'Username', 'required|is_unique[user.login]');
 	    	$this->form_validation->set_rules('password', 'Password', 'required');
-	    	$this->form_validation->set_rules('first', 'First', "required");
-	    	$this->form_validation->set_rules('last', 'last', "required");
-	    	$this->form_validation->set_rules('email', 'Email', "required|is_unique[user.email]");
+	    	$this->form_validation->set_rules('first', 'First', 'required');
+	    	$this->form_validation->set_rules('last', 'Last', 'required');
+	    	$this->form_validation->set_rules('email', 'Email', 'required|is_unique[user.email]');
 	    	
 	    
-	    	if ($this->form_validation->run() == FALSE)
+	    	if (!($this->form_validation->run()))
 	    	{
 	    		$this->load->view('account/newForm');
 	    	}

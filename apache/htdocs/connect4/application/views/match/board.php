@@ -5,11 +5,17 @@
 	<head>
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	<script src="<?= base_url() ?>/js/jquery.timers.js"></script>
+	<script src="<?= base_url() ?>/js/board.js"></script>
 	<script>
 
 		var otherUser = "<?= $otherUser->login ?>";
 		var user = "<?= $user->login ?>";
 		var status = "<?= $status ?>";
+
+		array = [[0, 0, 1, 0, 1, 0, 0], [0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
+			[1, 0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
+
+		drawBoard(array);
 		
 		$(function(){
 			$('body').everyTime(2000,function(){
@@ -35,6 +41,7 @@
 								$('[name=conversation]').val(conversation + "\n" + otherUser + ": " + msg);
 						}
 					});
+
 			});
 
 			$('form').submit(function(){
@@ -47,6 +54,11 @@
 						});
 				return false;
 				});	
+
+			array = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
+
+			drawBoard(array);
 		});
 	
 	</script>
@@ -63,13 +75,17 @@
 		if ($status == "playing")
 			echo "Playing " . $otherUser->login;
 		else
-			echo "Wating on " . $otherUser->login;
+			echo "Waiting on " . $otherUser->login;
 	?>
+	</div>
+
+	<div id='board'>
 	</div>
 	
 <?php 
 	
-	echo form_textarea('conversation');
+	echo form_textarea('conversation', set_value('conversation') ? set_value('conversation') : "", 
+		'readonly');
 	
 	echo form_open();
 	echo form_input('msg');
