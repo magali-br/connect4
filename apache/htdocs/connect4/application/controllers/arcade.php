@@ -19,20 +19,22 @@ class Arcade extends CI_Controller {
        
     
     function index() {
-		    	$data['user']=$_SESSION['user'];
-		    	if (isset($_SESSION['errmsg'])) {
-		    		$data['errmsg']=	$_SESSION['errmsg'];
-		    		unset($_SESSION['errmsg']);
-		    	}
-		    	$this->load->view('arcade/mainPage',$data);
+    	$data['user']=$_SESSION['user'];
+    	if (isset($_SESSION['errmsg'])) {
+    		$data['errmsg']=	$_SESSION['errmsg'];
+    		unset($_SESSION['errmsg']);
+    	}
+    	$data['title'] = 'Connect4';
+	    $data['main'] = 'arcade/mainPage.php';
+	    $this->load->view('utils/template.php',$data);
     }
 
     function getAvailableUsers() {
  	   	$this->load->model('user_model');
-    		$users = $this->user_model->getAvailableUsers();
-    		$data['users']=$users;
-    		$data['currentUser']=$_SESSION['user'];
-    		$this->load->view('arcade/availableUsers',$data);
+		$users = $this->user_model->getAvailableUsers();
+		$data['users']=$users;
+		$data['currentUser']=$_SESSION['user'];
+    	$this->load->view('arcade/availableUsers',$data);
     }
     
     function getInvitation() {
@@ -57,14 +59,14 @@ class Arcade extends CI_Controller {
     }
     
     function acceptInvitation() {
-	    	$user = $_SESSION['user'];
-	    	 
-	    	$this->load->model('user_model');
-	    	$this->load->model('invite_model');
-	    	$this->load->model('match_model');
-	    	
-	    	
-	    	$user = $this->user_model->get($user->login);
+    	$user = $_SESSION['user'];
+    	 
+    	$this->load->model('user_model');
+    	$this->load->model('invite_model');
+    	$this->load->model('match_model');
+    	
+    	
+    	$user = $this->user_model->get($user->login);
 	    	
 	    $invite = $this->invite_model->get($user->invite_id);
 	    $hostUser = $this->user_model->getFromId($invite->user1_id);

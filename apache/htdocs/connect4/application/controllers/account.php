@@ -21,7 +21,9 @@ class Account extends CI_Controller {
           
     
     function loginForm() {
-    		$this->load->view('account/loginForm');
+        $data['title'] = 'Connect4 Login';
+        $data['main'] = 'account/loginForm.php';
+        $this->load->view('utils/template.php',$data);
     }
     
     function login() {
@@ -31,7 +33,7 @@ class Account extends CI_Controller {
 
     		if ($this->form_validation->run() == FALSE)
     		{
-    			$this->load->view('account/loginForm');
+    			$this->loginForm();
     		}
     		else
     		{
@@ -49,11 +51,12 @@ class Account extends CI_Controller {
     				$this->user_model->updateStatus($user->id, User::AVAILABLE);
     				
     				redirect('arcade/index', 'refresh'); //redirect to the main application page
-    			}
- 			else {   			
-				$data['errorMsg']='Incorrect username or password!';
- 				$this->load->view('account/loginForm',$data);
- 			}
+    			} else {   			
+					$data['errorMsg']='Incorrect username or password!';
+					$data['title'] = 'Connect4 Login';
+	        		$data['main'] = 'account/loginForm.php';
+	        		$this->load->view('utils/template.php',$data);
+	 			}
     		}
     }
 
@@ -66,7 +69,9 @@ class Account extends CI_Controller {
     }
 
     function newForm() {
-	    	$this->load->view('account/newForm');
+    	$data['title'] = 'Connect4 New Account';
+        $data['main'] = 'account/newForm.php';
+        $this->load->view('utils/template.php',$data);
     }
     
     function createNew() {
@@ -80,7 +85,9 @@ class Account extends CI_Controller {
 	    
 	    	if (!($this->form_validation->run()))
 	    	{
-	    		$this->load->view('account/newForm');
+	    		$data['title'] = 'Connect4 New Account';
+        		$data['main'] = 'account/newForm.php';
+        		$this->load->view('utils/template.php',$data);
 	    	}
 	    	else  
 	    	{
@@ -104,7 +111,9 @@ class Account extends CI_Controller {
 
     
     function updatePasswordForm() {
-	    	$this->load->view('account/updatePasswordForm');
+    	$data['title'] = 'Connect4 Update Password';
+	    $data['main'] = 'account/updatePasswordForm.php';
+	    $this->load->view('utils/template.php',$data);
     }
     
     function updatePassword() {
@@ -115,7 +124,7 @@ class Account extends CI_Controller {
 	    	 
 	    	if ($this->form_validation->run() == FALSE)
 	    	{
-	    		$this->load->view('account/updatePasswordForm');
+	    		$this->updatePasswordForm();
 	    	}
 	    	else
 	    	{
@@ -132,13 +141,17 @@ class Account extends CI_Controller {
 	    		}
 	    		else {
 	    			$data['errorMsg']="Incorrect password!";
-	    			$this->load->view('account/updatePasswordForm',$data);
+	    			$data['title'] = 'Connect4 Update Password';
+				    $data['main'] = 'account/updatePasswordForm.php';
+				    $this->load->view('utils/template.php',$data);
 	    		}
 	    	}
     }
     
     function recoverPasswordForm() {
-    		$this->load->view('account/recoverPasswordForm');
+    	$data['title'] = 'Connect4 Recover Password';
+	    $data['main'] = 'account/recoverPasswordForm.php';
+	    $this->load->view('utils/template.php',$data);
     }
     
     function recoverPassword() {
@@ -147,7 +160,7 @@ class Account extends CI_Controller {
 	    	
 	    	if ($this->form_validation->run() == FALSE)
 	    	{
-	    		$this->load->view('account/recoverPasswordForm');
+	    		$this->recoverPasswordForm();
 	    	}
 	    	else
 	    	{ 
@@ -185,12 +198,16 @@ class Account extends CI_Controller {
 	    			//$data['errorMsg'] = $this->email->print_debugger();	
 	    			
 	    			//$this->load->view('emailPage',$data);
-	    			$this->load->view('account/emailPage');
+	    			$data['title'] = 'Connect4 Email';
+	    			$data['main'] = 'account/emailPage.php';
+	    			$this->load->view('utils/template.php',$data);
 	    			
 	    		}
 	    		else {
 	    			$data['errorMsg']="No record exists for this email!";
-	    			$this->load->view('account/recoverPasswordForm',$data);
+	    			$data['title'] = 'Connect4 Recover Password';
+				    $data['main'] = 'account/recoverPasswordForm.php';
+				    $this->load->view('utils/template.php',$data);
 	    		}
 	    	}
     }    

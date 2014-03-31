@@ -4,8 +4,8 @@ function drawBoard(board) {
 	var canvas = document.createElement("canvas");
 	canvas.setAttribute("id", "canvas");
 
-	canvas.setAttribute("width", 768);
-	canvas.setAttribute("height", 576);
+	canvas.setAttribute("width", 300);
+	canvas.setAttribute("height", 300);
 	canvas.setAttribute("tabindex", 1);
 	$("#board").append(canvas);
 
