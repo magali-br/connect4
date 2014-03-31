@@ -55,6 +55,7 @@ class Board extends CI_Controller {
     	$data['title'] = 'Connect4 Board';
 	    $data['main'] = 'match/board.php';
 	    $this->load->view('utils/template.php',$data);
+        //$this->load->view('match/board',$data);
     }
 
  	function postMsg() {

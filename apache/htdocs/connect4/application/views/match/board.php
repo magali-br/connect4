@@ -12,10 +12,22 @@
 		var user = "<?= $user->login ?>";
 		var status = "<?= $status ?>";
 
-		array = [[0, 0, 1, 0, 1, 0, 0], [0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
-			[1, 0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
+		var numRows = 6;
+		var numColumns = 7; 
+		board = [];
+		for (var i = 0; i < numRows; i++) {
+			row = [];
+			for (var j = 0; j < numColumns; j++) {
+				
+				row[j] = 0;
+			}
+			board[i] = row;
+		}
 
-		drawBoard(array);
+		// array = [[0, 0, 1, 0, 1, 0, 0], [0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
+		// 	[1, 0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
+
+		drawBoard(board);
 		
 		$(function(){
 			$('body').everyTime(2000,function(){
