@@ -2,13 +2,19 @@
 
 function drawBoard(board, isFirst) {
 	var canvas = document.createElement("canvas");
-	canvas.setAttribute("id", "canvas");
+	canvas.setAttribute("id", "boardCanvas");
 
 	canvas.setAttribute("width", 290);
 	canvas.setAttribute("height", 290);
 	canvas.setAttribute("tabindex", 1);
+
+	//Jquery creation of canvas - why doesn't work??
+	// var canvas = $('<canvas/>',{'id':'canvas'}).width(290).height(290);
+	//var canvas = $('<canvas/>').width(290).height(290);
 	$("#board").append(canvas);
 
+	$("#board").mousemove(mouseMoved);
+	$("#board").click(mouseClicked);
 
 	var context = canvas.getContext("2d");
 	context.fillStyle = '#2C3539';
@@ -50,4 +56,38 @@ function drawToken(context, x, y) {
 
 function drawPlacedToken(context, x, y) {
 	drawToken(context, x * 40 + 25, y * 40 + 25 + 40)
+}
+
+function mouseMoved(e) {
+	var mouseX, mouseY;
+
+    if(e.offsetX) {
+        mouseX = e.offsetX;
+        mouseY = e.offsetY;
+    } else if(e.layerX) {
+        mouseX = e.layerX;
+        mouseY = e.layerY;
+    }
+
+	// Not finding context????
+	var canvas = $('#boardCanvas');
+	var canvas = $('canvas');
+	var context = canvas.getContext("2d");
+	context.fillStyle = 'blue';
+	context.fillRect(0, 0, context.canvas.width, 40);
+	context.fillStyle('red');
+	drawToken(context, mouseX, 15);
+
+	$('#status').html('moved to ');// + mouseX);
+}
+
+function mouseClicked(e) {
+	if(e.offsetX) {
+        mouseX = e.offsetX;
+        mouseY = e.offsetY;
+    } else if(e.layerX) {
+        mouseX = e.layerX;
+        mouseY = e.layerY;
+    }
+    $('#status').html('clicked at ');// + parseInt(mouseX));
 }

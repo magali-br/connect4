@@ -26,12 +26,14 @@
 				board[i] = row;
 			}
 
-
+			//TEST!!!!
 			board[4][4] = 2;
 			board[3][4] = 1;
 			board[5][4] = 1;
 
 			drawBoard(board, isFirst);
+
+			document.onmousemove = mouseMoved;
 
 			$('body').everyTime(2000,function(){
 					if (status == 'waiting') {
