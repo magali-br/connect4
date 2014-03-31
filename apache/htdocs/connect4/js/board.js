@@ -1,4 +1,10 @@
+var tokenColour;
+var mousePosition;
+var tokenRadius = 15;
+var columnOffsetX = 25;
+var columnWidth = 40;
 
+var currentBoard;
 
 function drawBoard(board, isFirst) {
 	var canvas = document.createElement("canvas");
@@ -21,13 +27,14 @@ function drawBoard(board, isFirst) {
 	context.fillRect(0, 40, context.canvas.width, context.canvas.height);
 
 	if (isFirst) {
-		context.fillStyle = "red";
-		drawToken(context, context.canvas.width / 2, 15);
+		tokenColour = "red";
 	} else {
-		context.fillStyle = "yellow";
-		drawToken(context, context.canvas.width / 2, 15);
+		tokenColour = "yellow";
 	}
+	context.fillStyle = tokenColour;
+	drawToken(context, context.canvas.width / 2, 15);
 
+	currentBoard = board;
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[i].length; j++) {
 			if (board[i][j] == 1) {
@@ -50,12 +57,12 @@ function drawBoard(board, isFirst) {
 
 function drawToken(context, x, y) {
 	context.beginPath();
-	context.arc(x, y, 15, 0, 2*Math.PI);
+	context.arc(x, y, tokenRadius, 0, 2 * Math.PI);
 	context.fill();
 }
 
 function drawPlacedToken(context, x, y) {
-	drawToken(context, x * 40 + 25, y * 40 + 25 + 40)
+	drawToken(context, x * columnWidth + columnOffsetX, y * 40 + 25 + 40)
 }
 
 function mouseMoved(e) {
@@ -67,27 +74,39 @@ function mouseMoved(e) {
     } else if(e.layerX) {
         mouseX = e.layerX;
         mouseY = e.layerY;
+    } else {
+    	mouseX = 0;
+    	mouseY = 0;
     }
+    mousePosition = mouseX;
 
 	// Not finding context????
-	var canvas = $('#boardCanvas');
-	var canvas = $('canvas');
+	//var canvas = $('#boardCanvas');
+	var canvas = $('canvas')[0];
 	var context = canvas.getContext("2d");
-	context.fillStyle = 'blue';
+	context.fillStyle = 'white';
 	context.fillRect(0, 0, context.canvas.width, 40);
-	context.fillStyle('red');
-	drawToken(context, mouseX, 15);
+	context.fillStyle = tokenColour;
+	drawToken(context, mouseX - context.canvas.width / 2 - tokenRadius, 15);
 
-	$('#status').html('moved to ');// + mouseX);
+	$('#status').html('moved to ' + mouseX);
 }
 
 function mouseClicked(e) {
 	if(e.offsetX) {
         mouseX = e.offsetX;
         mouseY = e.offsetY;
-    } else if(e.layerX) {
-        mouseX = e.layerX;
-        mouseY = e.layerY;
+    // } else if(e.layerX) {
+    //     mouseX = e.layerX;
+    //     mouseY = e.layerY;
+    } else {
+    	mouseX = 0;
+    	mouseY = 0;
     }
-    $('#status').html('clicked at ');// + parseInt(mouseX));
+
+    mouseX = mousePosition;
+    column = (mouseX - 160 - columnOffsetX) / columnWidth;
+    $('#status').html('clicked at ' + parseInt(mouseX) + 'at column ' + parseInt(column));
+
+
 }
