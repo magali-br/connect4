@@ -5,6 +5,7 @@ var columnOffsetX = 25;
 var columnWidth = 40;
 
 var currentBoard;
+var isFirstPlayer;
 
 function drawBoard(board, isFirst) {
 	var canvas = document.createElement("canvas");
@@ -35,6 +36,7 @@ function drawBoard(board, isFirst) {
 	context.fillStyle = tokenColour;
 	drawToken(context, context.canvas.width / 2, 15);
 
+	isFirstPlayer = isFirst;
 	currentBoard = board;
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[i].length; j++) {
@@ -105,7 +107,34 @@ function mouseClicked(e) {
 	var context = canvas.getContext("2d");
     mouseX = mousePosition;
     column = mouseX / (context.canvas.width / 7);
-    $('#status').html('clicked at ' + parseInt(mouseX) + 'at column ' + parseInt(column));
+    $('#status').html('clicked at ' + parseFloat(mouseX) + 'at column ' + parseFloat(Math.floor(column)));
+    playInColumn(Math.floor(column));
+
+}
+
+function playInColumn(column) {
+	var played = false;
+
+	for (var row = (currentBoard.length - 1); row >= 0; row--) {
+		$('#status').html("row + " + row);
+		if (currentBoard[row][column] == 0) {
+			if (isFirstPlayer) {
+				currentBoard[row][column] = 1;
+			} else {
+				currentBoard[row][column] = 2;
+			}
+			played = true;
+			var canvas = $('canvas')[0];
+			var context = canvas.getContext("2d");
+			drawPlacedToken(context, column, row);
+			break;
+		}
+	}
+
+	
 
 
+	if (!played) {
+		alert("Column " + parseInt(column + 1) + " is full!");
+	}
 }
