@@ -16,12 +16,15 @@ function drawBoard(board) {
 		for (var j = 0; j < board[i].length; j++) {
 			if (board[i][j] == 1) {
 				context.fillStyle = "red";
-				context.fillRect(j * 30, i * 30, 10, 10);
+				
+				drawToken(context, j, i);
+				
 			} else if (board[i][j] == 2) {
 				
 				context.fillStyle = "yellow";
 
-				context.fillRect(j * 30, i * 30, 10, 10);
+				
+				drawToken(context, j, i);
 				
 			} else if (board[i][j] == 0) {
 				
