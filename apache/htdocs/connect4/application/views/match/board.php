@@ -33,8 +33,6 @@
 
 			drawBoard(board, isFirst);
 
-			document.onmousemove = mouseMoved;
-
 			$('body').everyTime(2000,function(){
 					if (status == 'waiting') {
 						$.getJSON('<?= base_url() ?>arcade/checkInvitation',function(data, text, jqZHR){

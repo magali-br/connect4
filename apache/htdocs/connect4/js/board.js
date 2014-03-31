@@ -19,6 +19,7 @@ function drawBoard(board, isFirst) {
 	//var canvas = $('<canvas/>').width(290).height(290);
 	$("#board").append(canvas);
 
+	document.onmousemove = mouseMoved;
 	$("#board").mousemove(mouseMoved);
 	$("#board").click(mouseClicked);
 
@@ -70,15 +71,12 @@ function mouseMoved(e) {
 
     if(e.offsetX) {
         mouseX = e.offsetX;
-        mouseY = e.offsetY;
     } else if(e.layerX) {
         mouseX = e.layerX;
-        mouseY = e.layerY;
     } else {
     	mouseX = 0;
-    	mouseY = 0;
     }
-    mousePosition = mouseX;
+    mousePosition = mouseX - 160;
 
 	// Not finding context????
 	//var canvas = $('#boardCanvas');
@@ -89,23 +87,24 @@ function mouseMoved(e) {
 	context.fillStyle = tokenColour;
 	drawToken(context, mouseX - context.canvas.width / 2 - tokenRadius, 15);
 
-	$('#status').html('moved to ' + mouseX);
+	$('#status').html('moved to ' + mousePosition);
 }
 
 function mouseClicked(e) {
-	if(e.offsetX) {
-        mouseX = e.offsetX;
-        mouseY = e.offsetY;
-    // } else if(e.layerX) {
-    //     mouseX = e.layerX;
-    //     mouseY = e.layerY;
-    } else {
-    	mouseX = 0;
-    	mouseY = 0;
-    }
-
+	// if(e.offsetX) {
+ //        mouseX = e.offsetX;
+ //        mouseY = e.offsetY;
+ //    // } else if(e.layerX) {
+ //    //     mouseX = e.layerX;
+ //    //     mouseY = e.layerY;
+ //    } else {
+ //    	mouseX = 0;
+ //    	mouseY = 0;
+ //    }
+	var canvas = $('canvas')[0];
+	var context = canvas.getContext("2d");
     mouseX = mousePosition;
-    column = (mouseX - 160 - columnOffsetX) / columnWidth;
+    column = mouseX / (context.canvas.width / 7);
     $('#status').html('clicked at ' + parseInt(mouseX) + 'at column ' + parseInt(column));
 
 
