@@ -10,6 +10,7 @@
 
 		var otherUser = "<?= $otherUser->login ?>";
 		var user = "<?= $user->login ?>";
+		var isFirst = "<?= $isFirst ?>";
 		var status = "<?= $status ?>";
 		
 		$(function(){
@@ -25,11 +26,12 @@
 				board[i] = row;
 			}
 
+
 			board[4][4] = 2;
 			board[3][4] = 1;
 			board[5][4] = 1;
 
-			drawBoard(board);
+			drawBoard(board, isFirst);
 
 			$('body').everyTime(2000,function(){
 					if (status == 'waiting') {
@@ -54,6 +56,8 @@
 								$('[name=conversation]').val(conversation + "\n" + otherUser + ": " + msg);
 						}
 					});
+
+					// Fetch new board values from server; display if exist
 
 			});
 

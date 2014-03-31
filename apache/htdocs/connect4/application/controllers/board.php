@@ -35,10 +35,13 @@ class Board extends CI_Controller {
     	}
     	else if ($user->user_status_id == User::PLAYING) {
     		$match = $this->match_model->get($user->match_id);
-    		if ($match->user1_id == $user->id)
+    		if ($match->user1_id == $user->id) {
     			$otherUser = $this->user_model->getFromId($match->user2_id);
-    		else
+                $data['isFirst'] = true;
+    		} else {
     			$otherUser = $this->user_model->getFromId($match->user1_id);
+                $data['isFirst'] = false;
+            }
     	}
     	
     	$data['user']=$user;
@@ -55,7 +58,6 @@ class Board extends CI_Controller {
     	$data['title'] = 'Connect4 Board';
 	    $data['main'] = 'match/board.php';
 	    $this->load->view('utils/template.php',$data);
-        //$this->load->view('match/board',$data);
     }
 
  	function postMsg() {
