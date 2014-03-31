@@ -14,6 +14,7 @@ function drawBoard(board) {
 	context.fillStyle = '#2C3539';
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
+
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[i].length; j++) {
 			if (board[i][j] == 1) {

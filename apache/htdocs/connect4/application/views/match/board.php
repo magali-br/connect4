@@ -11,25 +11,26 @@
 		var otherUser = "<?= $otherUser->login ?>";
 		var user = "<?= $user->login ?>";
 		var status = "<?= $status ?>";
-
-		var numRows = 6;
-		var numColumns = 7; 
-		board = [];
-		for (var i = 0; i < numRows; i++) {
-			row = [];
-			for (var j = 0; j < numColumns; j++) {
-				
-				row[j] = 0;
-			}
-			board[i] = row;
-		}
-
-		// array = [[0, 0, 1, 0, 1, 0, 0], [0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
-		// 	[1, 0, 0, 0, 0, 0, 0], [0, 2, 0, 0, 2, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
-
-		drawBoard(board);
 		
 		$(function(){
+			var numRows = 6;
+			var numColumns = 7; 
+			board = [];
+			for (var i = 0; i < numRows; i++) {
+				row = [];
+				for (var j = 0; j < numColumns; j++) {
+					
+					row[j] = 0;
+				}
+				board[i] = row;
+			}
+
+			board[4][4] = 2;
+			board[3][4] = 1;
+			board[5][4] = 1;
+
+			drawBoard(board);
+
 			$('body').everyTime(2000,function(){
 					if (status == 'waiting') {
 						$.getJSON('<?= base_url() ?>arcade/checkInvitation',function(data, text, jqZHR){
@@ -67,10 +68,6 @@
 				return false;
 				});	
 
-			array = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
-
-			drawBoard(array);
 		});
 	
 	</script>
