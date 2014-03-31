@@ -22,11 +22,13 @@ function drawBoard(board) {
 				context.fillStyle = "yellow";
 
 				context.fillRect(j * 30, i * 30, 10, 10);
+				
 			} else if (board[i][j] == 0) {
 				
 				context.fillStyle = "blue";
 
-				context.fillRect(j * 30, i * 30, 10, 10);
+				drawToken(context, j, i);
+				//context.fillRect(j * 30, i * 30, 10, 10);
 			}
 		}
 	}
@@ -38,3 +40,9 @@ function drawBoard(board) {
 
 	$('#status').html('TOOK OVER ');
 } 
+
+function drawToken(context, x, y) {
+	context.beginPath();
+	context.arc(x * 40 + 25, y * 40 + 25, 15, 0, 2*Math.PI);
+	context.stroke();
+}
