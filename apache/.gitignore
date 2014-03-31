@@ -1,0 +1,4 @@
+apache/log/* 
+apache/log/
+.directory
+debuglog.txt
