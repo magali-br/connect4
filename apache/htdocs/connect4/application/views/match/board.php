@@ -31,7 +31,7 @@
 			board[3][4] = 1;
 			board[5][4] = 1;
 
-			drawBoard(board, isFirst);
+			initializeBoard(board, isFirst);
 
 			$('body').everyTime(2000,function(){
 					if (status == 'waiting') {
@@ -57,7 +57,17 @@
 						}
 					});
 
-					// Fetch new board values from server; display if exist
+					var url = "<?= base_url() ?>board/getBoard";
+					$.getJSON(url, function (data,text,jqXHR){
+						if (data && data.status=='success') {
+							var board = data.board;
+							if (board) {
+								drawBoard(board);
+							}
+							//if other use played set currentPlayerTurn = true
+
+						}
+					});
 
 			});
 

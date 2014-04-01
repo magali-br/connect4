@@ -1,6 +1,6 @@
 var tokenColour;
 var playerNumber;
-var mousePosition;
+var mousePosition = -1;
 var tokenRadius = 15;
 var columnOffsetX = 25;
 var columnWidth = 40;
@@ -10,8 +10,9 @@ var rowCount = 6;
 
 var currentBoard;
 var isFirstPlayer;
+var currentPlayerTurn;
 
-function drawBoard(board, isFirst) {
+function initializeBoard(board, isFirst) {
 	var canvas = document.createElement("canvas");
 	canvas.setAttribute("id", "boardCanvas");
 
@@ -27,12 +28,21 @@ function drawBoard(board, isFirst) {
 	document.onmousemove = mouseMoved;
 	$("#board").mousemove(mouseMoved);
 	$("#board").click(mouseClicked);
+	if (isFirst) {
+		currentPlayerTurn = true;
+	}
 
+	isFirstPlayer = isFirst;
+	drawBoard(board);
+}
+
+function drawBoard(board) {
+	var canvas = $('canvas')[0];
 	var context = canvas.getContext("2d");
 	context.fillStyle = '#2C3539';
 	context.fillRect(0, 40, context.canvas.width, context.canvas.height);
 
-	if (isFirst) {
+	if (isFirstPlayer) {
 		tokenColour = "red";
 		playerNumber = 1;
 	} else {
@@ -40,9 +50,12 @@ function drawBoard(board, isFirst) {
 		playerNumber = 2;
 	}
 	context.fillStyle = tokenColour;
-	drawToken(context, context.canvas.width / 2, 15);
+	if (mousePosition == -1) {
+		drawToken(context, context.canvas.width / 2, 15);
+	} else {
+		drawToken(context, mousePosition - tokenRadius, 15);
+	}
 
-	isFirstPlayer = isFirst;
 	currentBoard = board;
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[i].length; j++) {
@@ -102,23 +115,17 @@ function mouseMoved(e) {
 }
 
 function mouseClicked(e) {
-	// if(e.offsetX) {
- //        mouseX = e.offsetX;
- //        mouseY = e.offsetY;
- //    // } else if(e.layerX) {
- //    //     mouseX = e.layerX;
- //    //     mouseY = e.layerY;
- //    } else {
- //    	mouseX = 0;
- //    	mouseY = 0;
- //    }
-	var canvas = $('canvas')[0];
-	var context = canvas.getContext("2d");
-    mouseX = mousePosition;
 
-    column = mouseX / (context.canvas.width / columnCount);
-    $('#status').html('clicked at ' + parseFloat(mouseX) + 'at column ' + parseFloat(Math.floor(column)));
-    playInColumn(Math.floor(column));
+	if (currentPlayerTurn) {
+		var canvas = $('canvas')[0];
+		var context = canvas.getContext("2d");
+	    mouseX = mousePosition;
+
+	    column = mouseX / (context.canvas.width / columnCount);
+	    $('#status').html('clicked at ' + parseFloat(mouseX) + 'at column ' + parseFloat(Math.floor(column)));
+	    
+	    playInColumn(Math.floor(column));
+	}
 
 }
 
@@ -135,6 +142,8 @@ function playInColumn(column) {
 			var context = canvas.getContext("2d");
 			drawPlacedToken(context, column, row);
 			checkWin(row, column);
+			currentPlayerTurn = false;
+			sendBoard();
 			break;
 		}
 	}
@@ -142,6 +151,19 @@ function playInColumn(column) {
 	if (!played) {
 		alert("Column " + parseInt(column + 1) + " is full!");
 	}
+}
+
+function sendBoard() {
+	var arguments = [];
+	arguments.push({
+		key: "board",
+		value: currentBoard
+	});
+	var url = "<?= base_url() ?>board/sendBoard";
+	$.post(url,arguments, function (data,textStatus,jqXHR){
+			alert("Played Successfully!");
+		});
+	return false;
 }
 
 function checkWin(row, column) {
