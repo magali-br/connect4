@@ -25,7 +25,16 @@
 	echo form_label('Password'); 
 	echo form_error('password');
 	echo form_password('password','',"required");
-	
+
+	echo "<p><br>For security purposes, please input
+		<br>the characters you see in the image below.</p>";
+	echo "<img id='captcha' src='". base_url() . "securimage/securimage_show.php' alt='CAPTCHA Image' />";
+	echo "<p/>";
+	echo '<input type="text" name="captcha_code" size="10" maxlength="6" />
+		<a href="#" 
+		onclick="document.getElementById(\'captcha\').src = \''
+					.base_url() . 'securimage/securimage_show.php?\' 
+				+ Math.random(); return false">[ Different Image ]</a><p/><br>';
 	echo form_submit('submit', 'Login');
 	
 	echo "<p>" . anchor('account/newForm','Create Account') . "</p>";
