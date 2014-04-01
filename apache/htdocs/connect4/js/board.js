@@ -146,15 +146,11 @@ function playInColumn(column) {
 
 function checkWin(row, column) {
 	count = 0;
-	// for (var i = 0; i < board.length; i++) {
-	// 	for (var j = 0; j < board[i].length; j++) {
 
-	// 	}
-	// }
-	begin = Math.max(row - 3, 0);
-	end = Math.min(row + 3, rowCount - 1);
+	beginRow = Math.max(row - 3, 0);
+	endRow = Math.min(row + 3, rowCount - 1);
 	var scope = [];
-	for (var i = begin; i <= end; i++) {
+	for (var i = beginRow; i <= endRow; i++) {
 		scope.push(currentBoard[i][column]);
 	}
 	var won = checkSequence(scope);
@@ -164,11 +160,39 @@ function checkWin(row, column) {
 		return won;
 	}
 
+	beginCol = Math.max(column - 3, 0);
+	endCol = Math.min(column + 3, columnCount - 1);
 	scope = [];
-	for (var i = begin; i <= end; i++) {
-		scope.push(currentBoard[i][column]);
+	for (var i = beginCol; i <= endCol; i++) {
+		scope.push(currentBoard[row][i]);
 	}
-	checkSequence(scope);
+	won = checkSequence(scope);
+
+	if (won) {
+		// do something
+		return won;
+	}
+
+
+	scope = [];
+	for (var i = -3; i <= 3; i++) {
+		r = row + i;
+		c = column + i;
+		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
+			scope.push(currentBoard[r][c]);
+		}
+	}
+	won = checkSequence(scope);
+
+	scope = [];
+	for (var i = -3; i <= 3; i++) {
+		r = row + (i * -1);
+		c = column + i;
+		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
+			scope.push(currentBoard[r][c]);
+		}
+	}
+	won = checkSequence(scope);
 
 }
 
