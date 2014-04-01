@@ -1,8 +1,12 @@
 var tokenColour;
+var playerNumber;
 var mousePosition;
 var tokenRadius = 15;
 var columnOffsetX = 25;
 var columnWidth = 40;
+
+var columnCount = 7;
+var rowCount = 6;
 
 var currentBoard;
 var isFirstPlayer;
@@ -30,8 +34,10 @@ function drawBoard(board, isFirst) {
 
 	if (isFirst) {
 		tokenColour = "red";
+		playerNumber = 1;
 	} else {
 		tokenColour = "yellow";
+		playerNumber = 2;
 	}
 	context.fillStyle = tokenColour;
 	drawToken(context, context.canvas.width / 2, 15);
@@ -78,16 +84,19 @@ function mouseMoved(e) {
     } else {
     	mouseX = 0;
     }
-    mousePosition = mouseX - 160;
 
-	// Not finding context????
-	//var canvas = $('#boardCanvas');
 	var canvas = $('canvas')[0];
 	var context = canvas.getContext("2d");
+	mousePosition = mouseX - 160 + tokenRadius;
+    if (mousePosition < tokenRadius * 2) {
+    	mousePosition = tokenRadius * 2;
+    } else if (mousePosition > context.canvas.width - 1) {
+    	mousePosition = context.canvas.width - 1;
+    }
 	context.fillStyle = 'white';
 	context.fillRect(0, 0, context.canvas.width, 40);
 	context.fillStyle = tokenColour;
-	drawToken(context, mouseX - context.canvas.width / 2 - tokenRadius, 15);
+	drawToken(context, mousePosition - tokenRadius, 15);
 
 	$('#status').html('moved to ' + mousePosition);
 }
@@ -106,7 +115,8 @@ function mouseClicked(e) {
 	var canvas = $('canvas')[0];
 	var context = canvas.getContext("2d");
     mouseX = mousePosition;
-    column = mouseX / (context.canvas.width / 7);
+
+    column = mouseX / (context.canvas.width / columnCount);
     $('#status').html('clicked at ' + parseFloat(mouseX) + 'at column ' + parseFloat(Math.floor(column)));
     playInColumn(Math.floor(column));
 
@@ -118,23 +128,64 @@ function playInColumn(column) {
 	for (var row = (currentBoard.length - 1); row >= 0; row--) {
 		$('#status').html("row + " + row);
 		if (currentBoard[row][column] == 0) {
-			if (isFirstPlayer) {
-				currentBoard[row][column] = 1;
-			} else {
-				currentBoard[row][column] = 2;
-			}
+			currentBoard[row][column] = playerNumber;
+			
 			played = true;
 			var canvas = $('canvas')[0];
 			var context = canvas.getContext("2d");
 			drawPlacedToken(context, column, row);
+			checkWin(row, column);
 			break;
 		}
 	}
 
-	
-
-
 	if (!played) {
 		alert("Column " + parseInt(column + 1) + " is full!");
 	}
+}
+
+function checkWin(row, column) {
+	count = 0;
+	// for (var i = 0; i < board.length; i++) {
+	// 	for (var j = 0; j < board[i].length; j++) {
+
+	// 	}
+	// }
+	begin = Math.max(row - 3, 0);
+	end = Math.min(row + 3, rowCount - 1);
+	var scope = [];
+	for (var i = begin; i <= end; i++) {
+		scope.push(currentBoard[i][column]);
+	}
+	var won = checkSequence(scope);
+
+	if (won) {
+		// do something
+		return won;
+	}
+
+	scope = [];
+	for (var i = begin; i <= end; i++) {
+		scope.push(currentBoard[i][column]);
+	}
+	checkSequence(scope);
+
+}
+
+function checkSequence(scope) {
+	var won = false;
+	var count = 0;
+	for (var i = 0; i < scope.length; i++) {
+		if (scope[i] == playerNumber) {
+			count++;
+		} else {
+			count = 0;
+		}
+		if (count >= 4) {
+			alert("You win!");
+			won = true;
+			return won;
+		}
+	}
+	return won;
 }

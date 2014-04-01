@@ -14,8 +14,8 @@
 		var status = "<?= $status ?>";
 		
 		$(function(){
-			var numRows = 6;
-			var numColumns = 7; 
+			var numRows = rowCount;
+			var numColumns = columnCount; 
 			board = [];
 			for (var i = 0; i < numRows; i++) {
 				row = [];
