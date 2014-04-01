@@ -96,13 +96,14 @@ class Arcade extends CI_Controller {
 			}
 			array_push($board, $row);
 		}
+		
 
 		// //TEST!!!!
-		// $board[4][4] = 2;
-		// $board[3][4] = 1;
+		$board[0][0] = 2;
+		$board[1][1] = 1;
 		// $board[5][4] = 1;
 
-		$this->board_state = serialize($board);
+		$match->board_state = serialize($board);
 	    $this->match_model->insert($match);
 	    $matchId = mysql_insert_id();
 

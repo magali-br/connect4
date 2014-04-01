@@ -143,7 +143,7 @@ function playInColumn(column) {
 			drawPlacedToken(context, column, row);
 			checkWin(row, column);
 			currentPlayerTurn = false;
-			sendBoard();
+			sendBoard(row, column);
 			break;
 		}
 	}
@@ -153,11 +153,19 @@ function playInColumn(column) {
 	}
 }
 
-function sendBoard() {
+function sendBoard(row, column) {
 	var arguments = [];
 	arguments.push({
 		key: "board",
 		value: currentBoard
+	});
+	arguments.push({
+		key: "row",
+		value: row
+	});
+	arguments.push({
+		key: "column",
+		value: column
 	});
 	var url = "<?= base_url() ?>board/sendBoard";
 	$.post(url,arguments, function (data,textStatus,jqXHR){

@@ -159,6 +159,19 @@ class Board extends CI_Controller {
         $match = $this->match_model->get($user->match_id);          
         
         $board = $this->input->post('board');
+
+        $row = $this->input->post('row');
+        $column = $this->input->post('column');
+        // make sure are appropriate values
+
+        $serial_board = $match->board_state;
+        $board = unserialize($serial_board);
+        // if ($board[$row][$column] != 0) {
+        //     $errormsg=  "Invalid Move";
+        //     goto error;
+        // }
+        $board[$row][$column] = 2;
+
         $serial_board = serialize($board);
         $this->match_model->updateBoard($match->id, $serial_board);
             

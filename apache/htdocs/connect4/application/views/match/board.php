@@ -63,6 +63,7 @@
 							var board = data.board;
 							if (board) {
 								drawBoard(board);
+								$('#status').html(board);
 							}
 							//if other use played set currentPlayerTurn = true
 
