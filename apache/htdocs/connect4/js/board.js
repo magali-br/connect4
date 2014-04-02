@@ -77,21 +77,44 @@ function drawGrid(board) {
 	}
 }
 
-function drawBoard(board, isFirst) {
+function drawBoard(board, isFirst, firstPlayerTurn) {
 	if (!currentBoard) {
 		initializeBoard(isFirst);
 	}
 	
 	drawGrid(board);
 
+	//$('#status').html("firstPlayerTurn " + firstPlayerTurn + " isFirst " + isFirst + "mouse "+ mousePosition);
+
 	isFirstPlayer = isFirst;
-	if (isFirst) {
+	if (isFirstPlayer) {
 		tokenColour = "red";
 		playerNumber = 1;
 	} else {
 		tokenColour = "yellow";
 		playerNumber = 2;
 	}
+	// if (firstPlayerTurn) {
+	// 	$('#status').html("firstPlayerTurn is true");
+	// }
+
+	if (isFirstPlayer && firstPlayerTurn) {
+
+		$('#status').html("turn for you, one!");
+		currentPlayerTurn = true;
+	} else if (!isFirstPlayer && !firstPlayerTurn) {
+		currentPlayerTurn = true;
+
+		$('#status').html("turn for you ,two");
+	} else {
+		currentPlayerTurn = false;
+
+		$('#status').html("not turn for you");
+
+	}
+
+	//$('#status').html(currentPlayerTurn.toString());
+	//$('#status').html(currentPlayerTurn.toString());
 	context.fillStyle = tokenColour;
 	if (mousePosition == -1) {
 		drawToken(context, context.canvas.width / 2, 15);
@@ -99,12 +122,26 @@ function drawBoard(board, isFirst) {
 		drawToken(context, mousePosition - tokenRadius, 15);
 	}
 
+	$('#status').html("after " + currentPlayerTurn.toString());
+
+	//$('#status').html("firstPlayerTurn ");
+	//$('#status').html("firstPlayerTurn " + firstPlayerTurn);
+
+	// if (isFirstPlayer && firstPlayerTurn) {
+	// 	currentPlayerTurn = true;
+	// } else if (!isFirstPlayer && !firstPlayerTurn) {
+	// 	currentPlayerTurn = true;
+	// } else {
+	// 	currentPlayerTurn = false;
+	// }
+
 } 
 
 function drawToken(context, x, y) {
 	context.beginPath();
 	context.arc(x, y, tokenRadius, 0, 2 * Math.PI);
 	context.fill();
+	return;
 }
 
 function drawPlacedToken(context, x, y) {
@@ -139,14 +176,14 @@ function mouseMoved(e) {
 
 function mouseClicked(e) {
 
-	//if (currentPlayerTurn) {
+	if (currentPlayerTurn) {
 		var canvas = $('canvas')[0];
 		var context = canvas.getContext("2d");
 	    mouseX = mousePosition;
 
 	    column = mouseX / (context.canvas.width / columnCount);
 	    playInColumn(Math.floor(column));
-	//}
+	}
 
 }
 
@@ -187,11 +224,9 @@ function sendBoard(row, column) {
 	arguments['column'] = parseInt(column);
 	arguments['isFirst'] = isFirstPlayer.toString();
 
-	$('#status').html(arguments['row'].toString() + " " + arguments['column'].toString());
-
 	var url = "sendBoard";
 	$.post(url, arguments, function (data,textStatus,jqXHR){
-
+			//alert(data);
 		});
 	return false;
 }

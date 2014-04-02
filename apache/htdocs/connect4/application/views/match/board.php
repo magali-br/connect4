@@ -47,8 +47,7 @@
 						if (data && data.status=='success') {
 							var board = data.board;
 							if (board) {
-								drawBoard(board, data.isFirst);
-								//$('#status').html(board);
+								drawBoard(board, data.isFirst, data.firstPlayerTurn);
 							}
 							//if other use played set currentPlayerTurn = true
 

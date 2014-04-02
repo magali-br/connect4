@@ -164,8 +164,9 @@ class Board extends CI_Controller {
         $column = intval($this->input->post('column'));
         $isFirst = $this->input->post('isFirst') === 'true';
 
-        $serial_board = $match->board_state;
-        $board = unserialize($serial_board);
+        $serial_board_state = $match->board_state;
+        $board_state = unserialize($serial_board_state);
+        $board = $board_state['board'];
 
         $numRows = 6;
         $numColumns = 7;
@@ -180,18 +181,24 @@ class Board extends CI_Controller {
             $errormsg=  "Invalid Move";
             goto error;
         }
-        
+
         if ($isFirst) {
             $userNum = 1;
         } else {
             $userNum = 2;
         }
         $board[$row][$column] = $userNum;
+        $board_state['board'] = $board;
+        if ($board_state['firstPlayerTurn']) {
+            $board_state['firstPlayerTurn'] = false;
+        } else {
+            $board_state['firstPlayerTurn'] = true;
+        }
 
-        $serial_board = serialize($board);
+        $serial_board = serialize($board_state);
         $this->match_model->updateBoard($match->id, $serial_board);
             
-        echo json_encode(array('status'=>'success'));
+        echo json_encode(array('status'=>'success firstPlayerTurn'.$board_state['firstPlayerTurn']));
          
         return;
         
@@ -224,8 +231,10 @@ class Board extends CI_Controller {
             $isFirst = false;
         }
             
-        $serial_board = $match->board_state;
-        $board = unserialize($serial_board);
+        $serial_board_state = $match->board_state;
+        $board_state = unserialize($serial_board_state);
+        $board = $board_state['board'];
+        $firstPlayerTurn = $board_state['firstPlayerTurn'];
 
 
         if ($this->db->trans_status() === FALSE) {
@@ -233,10 +242,11 @@ class Board extends CI_Controller {
             goto transactionerror;
         }
         
-        // if all went well commit changes
+        // If all went well, commit changes
         $this->db->trans_commit();
         
-        echo json_encode(array('status'=>'success','board'=>$board, 'isFirst'=>$isFirst));
+        echo json_encode(array('status'=>'success','board'=>$board, 
+                            'isFirst'=>$isFirst, 'firstPlayerTurn'=>$firstPlayerTurn));
         return;
         
         transactionerror:
