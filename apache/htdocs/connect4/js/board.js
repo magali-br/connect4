@@ -45,10 +45,6 @@ function initializeBoard(isFirst) {
 		}
 		board[i] = row;
 	}
-			//TEST!!!!
-			board[4][4] = 2;
-			board[3][4] = 1;
-			board[5][4] = 1;
 
 	drawBoard(board);
 }
@@ -128,21 +124,18 @@ function mouseMoved(e) {
 	context.fillStyle = tokenColour;
 	drawToken(context, mousePosition - tokenRadius, 15);
 
-	$('#status').html('moved to ' + mousePosition);
 }
 
 function mouseClicked(e) {
 
-	if (currentPlayerTurn) {
+	//if (currentPlayerTurn) {
 		var canvas = $('canvas')[0];
 		var context = canvas.getContext("2d");
 	    mouseX = mousePosition;
 
 	    column = mouseX / (context.canvas.width / columnCount);
-	    $('#status').html('clicked at ' + parseFloat(mouseX) + 'at column ' + parseFloat(Math.floor(column)));
-	    
 	    playInColumn(Math.floor(column));
-	}
+	//}
 
 }
 
@@ -150,7 +143,6 @@ function playInColumn(column) {
 	var played = false;
 
 	for (var row = (currentBoard.length - 1); row >= 0; row--) {
-		$('#status').html("row + " + row);
 		if (currentBoard[row][column] == 0) {
 			currentBoard[row][column] = playerNumber;
 			
@@ -171,22 +163,20 @@ function playInColumn(column) {
 }
 
 function sendBoard(row, column) {
-	var arguments = [];
-	arguments.push({
-		key: "board",
-		value: currentBoard
-	});
-	arguments.push({
-		key: "row",
-		value: row
-	});
-	arguments.push({
-		key: "column",
-		value: column
-	});
-	var url = "<?= base_url() ?>board/sendBoard";
-	$.post(url,arguments, function (data,textStatus,jqXHR){
-			alert("Played Successfully!");
+
+	var arguments = {};
+
+	arguments[row] = row;
+	arguments[column] = column;
+	//args = arguments.serialize();
+
+	$('#status').html(arguments[row].toString() + " " + arguments[column].toString());
+
+	var url = "sendBoard";
+	$.post(url, arguments, function (data,textStatus,jqXHR){
+			var board = data.board;
+			alert('yo!' + data.toString());
+
 		});
 	return false;
 }

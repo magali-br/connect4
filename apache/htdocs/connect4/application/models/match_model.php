@@ -44,7 +44,7 @@ class Match_model extends CI_Model {
 
 	function updateBoard($id, $board_state) {
 		$this->db->where('id',$id);
-		return $this->db->update('board_state',array('match_status_id'=>$board_state));
+		return $this->db->update('match',array('board_state'=>$board_state));
 	}
 	
 }

@@ -99,9 +99,8 @@ class Arcade extends CI_Controller {
 		
 
 		// //TEST!!!!
-		$board[0][0] = 2;
-		$board[1][1] = 1;
-		// $board[5][4] = 1;
+		$board[5][5] = 2;
+		$board[4][4] = 1;
 
 		$match->board_state = serialize($board);
 	    $this->match_model->insert($match);
