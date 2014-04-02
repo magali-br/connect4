@@ -161,7 +161,13 @@ function playInColumn(column) {
 			var canvas = $('canvas')[0];
 			var context = canvas.getContext("2d");
 			drawPlacedToken(context, column, row);
-			checkWin(row, column);
+			if (checkWin(row, column)) {
+				// do something
+			}
+			if (checkTie()) {
+				// do something
+			}
+
 			currentPlayerTurn = false;
 			sendBoard(row, column);
 			break;
@@ -191,7 +197,9 @@ function sendBoard(row, column) {
 }
 
 function checkWin(row, column) {
-	count = 0;
+	var count = 0;
+
+	var won = true;
 
 	beginRow = Math.max(row - 3, 0);
 	endRow = Math.min(row + 3, rowCount - 1);
@@ -199,11 +207,8 @@ function checkWin(row, column) {
 	for (var i = beginRow; i <= endRow; i++) {
 		scope.push(currentBoard[i][column]);
 	}
-	var won = checkSequence(scope);
-
-	if (won) {
-		// do something
-		return won;
+	if (checkSequence(scope)) {
+		won = true;
 	}
 
 	beginCol = Math.max(column - 3, 0);
@@ -212,13 +217,9 @@ function checkWin(row, column) {
 	for (var i = beginCol; i <= endCol; i++) {
 		scope.push(currentBoard[row][i]);
 	}
-	won = checkSequence(scope);
-
-	if (won) {
-		// do something
-		return won;
+	if (checkSequence(scope)) {
+		won = true;
 	}
-
 
 	scope = [];
 	for (var i = -3; i <= 3; i++) {
@@ -228,7 +229,9 @@ function checkWin(row, column) {
 			scope.push(currentBoard[r][c]);
 		}
 	}
-	won = checkSequence(scope);
+	if (checkSequence(scope)) {
+		won = true;
+	}
 
 	scope = [];
 	for (var i = -3; i <= 3; i++) {
@@ -238,7 +241,11 @@ function checkWin(row, column) {
 			scope.push(currentBoard[r][c]);
 		}
 	}
-	won = checkSequence(scope);
+	if (checkSequence(scope)) {
+		won = true;
+	}
+
+	return won;
 
 }
 
@@ -258,4 +265,17 @@ function checkSequence(scope) {
 		}
 	}
 	return won;
+}
+
+function checkTie() {
+	var tie = true;
+	for (var i = 0; i < rowCount; i++) {
+		for (var j = 0; j < columnCount; j++) {
+			if (currentBoard[i][j] == 0) {
+				// table not yet full
+				tie = false;
+			}
+		}
+	}
+	return tie;
 }
