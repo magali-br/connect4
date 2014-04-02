@@ -166,16 +166,13 @@ function sendBoard(row, column) {
 
 	var arguments = {};
 
-	arguments[row] = row;
-	arguments[column] = column;
-	//args = arguments.serialize();
+	arguments['row'] = parseInt(row);
+	arguments['column'] = parseInt(column);
 
-	$('#status').html(arguments[row].toString() + " " + arguments[column].toString());
+	$('#status').html(arguments['row'].toString() + " " + arguments['column'].toString());
 
 	var url = "sendBoard";
 	$.post(url, arguments, function (data,textStatus,jqXHR){
-			var board = data.board;
-			alert('yo!' + data.toString());
 
 		});
 	return false;

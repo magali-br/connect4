@@ -159,24 +159,27 @@ class Board extends CI_Controller {
         
         $match = $this->match_model->get($user->match_id);          
         
-        //$board = $this->input->post('board');
 
         $row = intval($this->input->post('row'));
         $column = intval($this->input->post('column'));
-        // make sure are appropriate values
 
         $serial_board = $match->board_state;
         $board = unserialize($serial_board);
-        // // if ($board[$row][$column] != 0) {
-        // //     $errormsg=  "Invalid Move";
-        // //     goto error;
-        // // }
+
+        $numRows = 6;
+        $numColumns = 7;
+        if (($row < $numRows) && ($row <= 0) 
+            && ($column <= 0) && ($column <= $numColumns)
+            && ($board[$row][$column] != 0)) {
+                $errormsg=  "Invalid Move";
+                goto error;
+        }
         $board[$row][$column] = 2;
 
         $serial_board = serialize($board);
         $this->match_model->updateBoard($match->id, $serial_board);
             
-        echo json_encode(array('status'=>'success row '.$row.' column '.strval($column), 'board'=>$board));
+        echo json_encode(array('status'=>'success'));
          
         return;
         
