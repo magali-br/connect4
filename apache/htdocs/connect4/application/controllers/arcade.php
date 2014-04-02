@@ -194,7 +194,7 @@ class Arcade extends CI_Controller {
 	
 	
     function invite() {
-    		try {
+    	try {
     		$login = $this->input->get('login');
 		
 		if (!isset($login)) 
@@ -263,10 +263,9 @@ class Arcade extends CI_Controller {
     		$_SESSION["errmsg"] = "Sorry, this user is no longer available.";
     	 
     		redirect('arcade/index', 'refresh'); //redirect to the main application page
-    		}
-    		catch(Exception $e) {
-    			$this->db->trans_rollback();
-    		}
+    	} catch(Exception $e) {
+    		$this->db->trans_rollback();
+    	}
     		
     }
  

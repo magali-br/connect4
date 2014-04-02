@@ -12,7 +12,7 @@ var currentBoard;
 var isFirstPlayer;
 var currentPlayerTurn;
 
-function initializeBoard(board, isFirst) {
+function initializeBoard(isFirst) {
 	var canvas = document.createElement("canvas");
 	canvas.setAttribute("id", "boardCanvas");
 
@@ -33,6 +33,23 @@ function initializeBoard(board, isFirst) {
 	}
 
 	isFirstPlayer = isFirst;
+
+	var numRows = rowCount;
+	var numColumns = columnCount; 
+	board = [];
+	for (var i = 0; i < numRows; i++) {
+		row = [];
+		for (var j = 0; j < numColumns; j++) {
+			
+			row[j] = 0;
+		}
+		board[i] = row;
+	}
+			//TEST!!!!
+			board[4][4] = 2;
+			board[3][4] = 1;
+			board[5][4] = 1;
+
 	drawBoard(board);
 }
 

@@ -14,39 +14,26 @@
 		var status = "<?= $status ?>";
 		
 		$(function(){
-			var numRows = rowCount;
-			var numColumns = columnCount; 
-			board = [];
-			for (var i = 0; i < numRows; i++) {
-				row = [];
-				for (var j = 0; j < numColumns; j++) {
-					
-					row[j] = 0;
-				}
-				board[i] = row;
-			}
 
-			//TEST!!!!
-			board[4][4] = 2;
-			board[3][4] = 1;
-			board[5][4] = 1;
-
-			initializeBoard(board, isFirst);
+			initializeBoard(isFirst);
 
 			$('body').everyTime(2000,function(){
+
 					if (status == 'waiting') {
 						$.getJSON('<?= base_url() ?>arcade/checkInvitation',function(data, text, jqZHR){
-								if (data && data.status=='rejected') {
-									alert("Sorry, your invitation to play was declined!");
-									window.location.href = '<?= base_url() ?>arcade/index';
-								}
-								if (data && data.status=='accepted') {
-									status = 'playing';
-									$('#status').html('Playing ' + otherUser);
-								}
+							if (data && data.status=='rejected') {
+								alert("Sorry, your invitation to play was declined!");
+								window.location.href = '<?= base_url() ?>arcade/index';
+							}
+							if (data && data.status=='accepted') {
+								status = 'playing';
+								$('#status').html('Playing ' + otherUser);
+								initializeBoard(board, isFirst);
+							}
 								
 						});
 					}
+
 					var url = "<?= base_url() ?>board/getMsg";
 					$.getJSON(url, function (data,text,jqXHR){
 						if (data && data.status=='success') {
@@ -98,7 +85,7 @@
 	<?php 
 		if ($status == "playing")
 			echo "Playing " . $otherUser->login;
-		else
+		else if ($status == "waiting")
 			echo "Waiting on " . $otherUser->login;
 	?>
 	</div>
