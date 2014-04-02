@@ -30,6 +30,8 @@ function initializeBoard(isFirst) {
 	$("#board").click(mouseClicked);
 	if (isFirst) {
 		currentPlayerTurn = true;
+	} else {
+		currentPlayerTurn = false;
 	}
 
 	isFirstPlayer = isFirst;
@@ -46,29 +48,14 @@ function initializeBoard(isFirst) {
 		board[i] = row;
 	}
 
-	drawBoard(board);
+	drawGrid(board);
 }
 
-function drawBoard(board) {
+function drawGrid(board) {
 	var canvas = $('canvas')[0];
 	var context = canvas.getContext("2d");
 	context.fillStyle = '#2C3539';
 	context.fillRect(0, 40, context.canvas.width, context.canvas.height);
-
-	if (isFirstPlayer) {
-		tokenColour = "red";
-		playerNumber = 1;
-	} else {
-		tokenColour = "yellow";
-		playerNumber = 2;
-	}
-	context.fillStyle = tokenColour;
-	if (mousePosition == -1) {
-		drawToken(context, context.canvas.width / 2, 15);
-	} else {
-		drawToken(context, mousePosition - tokenRadius, 15);
-	}
-
 	currentBoard = board;
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[i].length; j++) {
@@ -88,6 +75,30 @@ function drawBoard(board) {
 			}
 		}
 	}
+}
+
+function drawBoard(board, isFirst) {
+	if (!currentBoard) {
+		initializeBoard(isFirst);
+	}
+	
+	drawGrid(board);
+
+	isFirstPlayer = isFirst;
+	if (isFirst) {
+		tokenColour = "red";
+		playerNumber = 1;
+	} else {
+		tokenColour = "yellow";
+		playerNumber = 2;
+	}
+	context.fillStyle = tokenColour;
+	if (mousePosition == -1) {
+		drawToken(context, context.canvas.width / 2, 15);
+	} else {
+		drawToken(context, mousePosition - tokenRadius, 15);
+	}
+
 } 
 
 function drawToken(context, x, y) {
@@ -168,6 +179,7 @@ function sendBoard(row, column) {
 
 	arguments['row'] = parseInt(row);
 	arguments['column'] = parseInt(column);
+	arguments['isFirst'] = isFirstPlayer.toString();
 
 	$('#status').html(arguments['row'].toString() + " " + arguments['column'].toString());
 

@@ -7,6 +7,7 @@
 
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	<script src="<?= base_url() ?>/js/jquery.timers.js"></script>
+	<script src="<?= base_url() ?>/js/board.js"></script>
 	<script>
 		$(function(){
 			$('#availableUsers').everyTime(500,function(){
@@ -18,8 +19,10 @@
 								var time=data.time;
 								if(confirm('Play ' + user)) 
 									$.getJSON('<?= base_url() ?>arcade/acceptInvitation',function(data, text, jqZHR){
-										if (data && data.status == 'success')
+										if (data && data.status == 'success') {
 											window.location.href = '<?= base_url() ?>board/index';
+											initializeBoard(false);
+										}
 									});
 								else  
 									$.post("<?= base_url() ?>arcade/declineInvitation");

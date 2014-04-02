@@ -15,8 +15,6 @@
 		
 		$(function(){
 
-			initializeBoard(isFirst);
-
 			$('body').everyTime(2000,function(){
 
 					if (status == 'waiting') {
@@ -28,7 +26,7 @@
 							if (data && data.status=='accepted') {
 								status = 'playing';
 								$('#status').html('Playing ' + otherUser);
-								initializeBoard(board, isFirst);
+								initializeBoard(true);
 							}
 								
 						});
@@ -49,7 +47,7 @@
 						if (data && data.status=='success') {
 							var board = data.board;
 							if (board) {
-								drawBoard(board);
+								drawBoard(board, data.isFirst);
 								//$('#status').html(board);
 							}
 							//if other use played set currentPlayerTurn = true

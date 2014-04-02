@@ -162,6 +162,7 @@ class Board extends CI_Controller {
 
         $row = intval($this->input->post('row'));
         $column = intval($this->input->post('column'));
+        $isFirst = $this->input->post('isFirst') === 'true';
 
         $serial_board = $match->board_state;
         $board = unserialize($serial_board);
@@ -174,7 +175,18 @@ class Board extends CI_Controller {
                 $errormsg=  "Invalid Move";
                 goto error;
         }
-        $board[$row][$column] = 2;
+
+        if ($isFirst != ($match->user1_id == $user->id)) {
+            $errormsg=  "Invalid Move";
+            goto error;
+        }
+        
+        if ($isFirst) {
+            $userNum = 1;
+        } else {
+            $userNum = 2;
+        }
+        $board[$row][$column] = $userNum;
 
         $serial_board = serialize($board);
         $this->match_model->updateBoard($match->id, $serial_board);
@@ -204,7 +216,13 @@ class Board extends CI_Controller {
         // start transactional mode  
         $this->db->trans_begin();
             
-        $match = $this->match_model->getExclusive($user->match_id);         
+        $match = $this->match_model->getExclusive($user->match_id);
+
+        if ($match->user1_id == $user->id) {
+            $isFirst = true;
+        } else {
+            $isFirst = false;
+        }
             
         $serial_board = $match->board_state;
         $board = unserialize($serial_board);
@@ -218,14 +236,14 @@ class Board extends CI_Controller {
         // if all went well commit changes
         $this->db->trans_commit();
         
-        echo json_encode(array('status'=>'success','board'=>$board));
+        echo json_encode(array('status'=>'success','board'=>$board, 'isFirst'=>$isFirst));
         return;
         
         transactionerror:
         $this->db->trans_rollback();
         
         error:
-        echo json_encode(array('status'=>'failure','board'=>$errormsg));
+        echo json_encode(array('status'=>'failure','msg'=>$errormsg));
     }
  	
  }
