@@ -28,6 +28,11 @@
 <body>  
 	<h1>New Account</h1>
 <?php 
+
+	if (isset($errorMsg)) {
+		echo "<p>" . $errorMsg . "</p>";
+	}
+
 	echo form_open('account/createNew');
 	echo form_label('Username'); 
 	echo form_error('username');
@@ -47,6 +52,17 @@
 	echo form_label('Email');
 	echo form_error('email');
 	echo form_input('email',set_value('email'),"required");
+
+	echo "<p><br>For security purposes, please input
+		<br>the characters you see in the image below.</p>";
+	echo "<img id='captcha' src='". base_url() . "securimage/securimage_show.php' alt='CAPTCHA Image' />";
+	echo "<p/>";
+	echo '<input type="text" name="captcha_code" size="10" maxlength="6" />
+		<a href="#" 
+		onclick="document.getElementById(\'captcha\').src = \''
+					.base_url() . 'securimage/securimage_show.php?\' 
+				+ Math.random(); return false">[ Different Image ]</a><p/><br>';
+
 	echo form_submit('submit', 'Register');
 	echo form_close();
 ?>	

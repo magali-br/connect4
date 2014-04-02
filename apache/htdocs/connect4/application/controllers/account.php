@@ -46,15 +46,15 @@ class Account extends CI_Controller {
     			 
     			if (isset($user) && $user->comparePassword($clearPassword)) {
 
-    				include_once $_SERVER['DOCUMENT_ROOT'] . '/connect4/securimage/securimage.php';
-					$securimage = new Securimage();
-					if ($securimage->check($_POST['captcha_code']) == false) {
-						$data['errorMsg']='Your input does not match the image.';
-						$data['title'] = 'Connect4 Login';
-	        			$data['main'] = 'account/loginForm.php';
-	        			$this->load->view('utils/template.php',$data);
+    	// 			include_once $_SERVER['DOCUMENT_ROOT'] . '/connect4/securimage/securimage.php';
+					// $securimage = new Securimage();
+					// if ($securimage->check($_POST['captcha_code']) == false) {
+					// 	$data['errorMsg']='Your input does not match the image.';
+					// 	$data['title'] = 'Connect4 Login';
+	    //     			$data['main'] = 'account/loginForm.php';
+	    //     			$this->load->view('utils/template.php',$data);
 
-					} else {
+					// } else {
 
 
 	    				$_SESSION['user'] = $user;
@@ -63,7 +63,7 @@ class Account extends CI_Controller {
 	    				$this->user_model->updateStatus($user->id, User::AVAILABLE);
 	    				
 	    				redirect('arcade/index', 'refresh'); //redirect to the main application page
-	    			}
+	    			//}
     			} else {   			
 					$data['errorMsg']='Incorrect username or password!';
 					$data['title'] = 'Connect4 Login';
@@ -96,29 +96,39 @@ class Account extends CI_Controller {
 	    	$this->form_validation->set_rules('email', 'Email', 'required|is_unique[user.email]');
 	    	
 	    
-	    	if (!($this->form_validation->run()))
-	    	{
+	    	if (!($this->form_validation->run())) {
 	    		$data['title'] = 'Connect4 New Account';
         		$data['main'] = 'account/newForm.php';
         		$this->load->view('utils/template.php',$data);
-	    	}
-	    	else  
-	    	{
-	    		$user = new User();
-	    		 
-	    		$user->login = $this->input->post('username');
-	    		$user->first = $this->input->post('first');
-	    		$user->last = $this->input->post('last');
-	    		$clearPassword = $this->input->post('password');
-	    		$user->encryptPassword($clearPassword);
-	    		$user->email = $this->input->post('email');
-	    		
-	    		$this->load->model('user_model');
-	    		 
-	    		
-	    		$error = $this->user_model->insert($user);
-	    		
-	    		$this->load->view('account/loginForm');
+	    	} else {
+
+   				include_once $_SERVER['DOCUMENT_ROOT'] . '/connect4/securimage/securimage.php';
+				$securimage = new Securimage();
+				if ($securimage->check($_POST['captcha_code']) == false) {
+					$data['errorMsg']='Your input does not match the image.';
+					$data['title'] = 'Connect4 New Account';
+        			$data['main'] = 'account/newForm.php';
+        			$this->load->view('utils/template.php',$data);
+
+				} else {
+		    		$user = new User();
+		    		 
+		    		$user->login = $this->input->post('username');
+		    		$user->first = $this->input->post('first');
+		    		$user->last = $this->input->post('last');
+		    		$clearPassword = $this->input->post('password');
+		    		$user->encryptPassword($clearPassword);
+		    		$user->email = $this->input->post('email');
+		    		
+		    		$this->load->model('user_model');
+		    		 
+		    		
+		    		$error = $this->user_model->insert($user);
+		    		
+		    		$data['title'] = 'Connect4 Login';
+        			$data['main'] = 'account/loginForm.php';
+        			$this->load->view('utils/template.php',$data);
+		    	}
 	    	}
     }
 
