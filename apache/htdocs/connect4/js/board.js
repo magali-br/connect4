@@ -12,6 +12,9 @@ var currentBoard;
 var isFirstPlayer;
 var currentPlayerTurn;
 
+var backgroundColour = '#D9D2C8';
+var gridColour = '#0F2C6E';
+
 function initializeBoard(isFirst) {
 	if (!currentBoard) {
 		var canvas = document.createElement("canvas");
@@ -56,7 +59,10 @@ function initializeBoard(isFirst) {
 function drawGrid(board) {
 	var canvas = $('canvas')[0];
 	var context = canvas.getContext("2d");
-	context.fillStyle = '#2C3539';
+	context.fillStyle = backgroundColour;
+	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+
+	context.fillStyle = gridColour;//'#2C3539';
 	context.fillRect(0, 40, context.canvas.width, context.canvas.height);
 	currentBoard = board;
 	for (var i = 0; i < board.length; i++) {
@@ -72,10 +78,17 @@ function drawGrid(board) {
 				
 			} else if (board[i][j] == 0) {
 				
-				context.fillStyle = "white";
+				context.fillStyle = backgroundColour;
 				drawPlacedToken(context, j, i);
 			}
 		}
+	}
+
+	context.fillStyle = tokenColour;
+	if (mousePosition == -1) {
+		drawToken(context, context.canvas.width / 2, 15);
+	} else {
+		drawToken(context, mousePosition - tokenRadius, 15);
 	}
 }
 
@@ -133,13 +146,6 @@ function drawBoard(board, isFirst, firstPlayerTurn, matchStatus) {
 
 		}
 
-		context.fillStyle = tokenColour;
-		if (mousePosition == -1) {
-			drawToken(context, context.canvas.width / 2, 15);
-		} else {
-			drawToken(context, mousePosition - tokenRadius, 15);
-		}
-
 	}
 
 } 
@@ -184,7 +190,7 @@ function mouseMoved(e) {
     } else if (mousePosition > context.canvas.width - 1) {
     	mousePosition = context.canvas.width - 1;
     }
-	context.fillStyle = 'white';
+	context.fillStyle = backgroundColour;
 	context.fillRect(0, 0, context.canvas.width, 40);
 	context.fillStyle = tokenColour;
 	drawToken(context, mousePosition - tokenRadius, 15);

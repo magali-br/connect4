@@ -1,7 +1,8 @@
  body{
- 	background-image:url('http://localhost/csc309db/images/dcs_logo.png');
+ 	background-image:url('../images/wallpaperCorner.jpg');
 	background-repeat:no-repeat;
-	background-size:200px;
+	background-size:auto;
+	background-color: #D9D2C8;
     font-family: Arial, Verdana, sans-serif;
     margin:0;
     padding:0;
@@ -47,7 +48,7 @@
 	margin-left:160px;
     width:540px;
     height:800px;
-	background: white;
+	background: rgba(0, 0, 0, 0);
  }
 
 
