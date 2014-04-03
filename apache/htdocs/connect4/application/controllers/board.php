@@ -6,6 +6,8 @@ class Board extends CI_Controller {
     		// Call the Controller constructor
 	    	parent::__construct();
 	    	session_start();
+        $this->numRows = 6;
+        $this->numColumns = 7;
     } 
           
     public function _remap($method, $params = array()) {
@@ -189,16 +191,34 @@ class Board extends CI_Controller {
         }
         $board[$row][$column] = $userNum;
         $board_state['board'] = $board;
-        if ($board_state['firstPlayerTurn']) {
-            $board_state['firstPlayerTurn'] = false;
+
+        $win = $this->checkWin($board, $row, $column);
+        if ($win == 1) {
+
+            $this->match_model->updateStatus($match->id,Match::U1WIN);
+
+        } else if ($win == 2) {
+
+            $this->match_model->updateStatus($match->id,Match::U2WIN);
+
+        } else if ($this->checkTie($board)) {
+
+            $this->match_model->updateStatus($match->id,Match::TIE);
+
         } else {
-            $board_state['firstPlayerTurn'] = true;
+
+            if ($board_state['firstPlayerTurn']) {
+                $board_state['firstPlayerTurn'] = false;
+            } else {
+                $board_state['firstPlayerTurn'] = true;
+            }
         }
 
         $serial_board = serialize($board_state);
         $this->match_model->updateBoard($match->id, $serial_board);
             
-        echo json_encode(array('status'=>'success firstPlayerTurn'.$board_state['firstPlayerTurn']));
+        echo json_encode(array('status'=>'success win: ' .strval($win)));
+        //  echo json_encode(array('status'=>'success u1Val:  win: ' .strval($win)));
          
         return;
         
@@ -244,9 +264,12 @@ class Board extends CI_Controller {
         
         // If all went well, commit changes
         $this->db->trans_commit();
+
+        $match_status = $match->match_status_id;
         
         echo json_encode(array('status'=>'success','board'=>$board, 
-                            'isFirst'=>$isFirst, 'firstPlayerTurn'=>$firstPlayerTurn));
+                            'isFirst'=>$isFirst, 'firstPlayerTurn'=>$firstPlayerTurn,
+                            'matchStatus'=>$match_status));
         return;
         
         transactionerror:
@@ -254,6 +277,96 @@ class Board extends CI_Controller {
         
         error:
         echo json_encode(array('status'=>'failure','msg'=>$errormsg));
+    }
+
+
+    function checkWin($currentBoard, $row, $column) {
+        $count = 0;
+
+        $won = false;
+
+        $beginRow = max($row - 3, 0);
+        $endRow = min($row + 3, $this->numRows - 1);
+
+        $scope = array();
+        for ($i = $beginRow; $i <= $endRow; $i++) {
+            array_push($scope, $currentBoard[$i][$column]);
+        }
+        if ($this->checkSequence($scope)) {
+            $won = true;
+        }
+
+        $beginCol = max($column - 3, 0);
+        $endCol = min($column + 3, $this->numColumns - 1);
+        $scope = array();
+        for ($i = $beginCol; $i <= $endCol; $i++) {
+            array_push($scope, $currentBoard[$row][$i]);
+        }
+        if ($this->checkSequence($scope)) {
+            $won = true;
+        }
+
+        $scope = array();
+        for ($i = -3; $i <= 3; $i++) {
+            $r = $row + $i;
+            $c = $column + $i;
+            if (($r >= 0) && ($r < $this->numRows) 
+                && ($c >= 0) && ($c < $this->numColumns)) {
+                array_push($scope, $currentBoard[$r][$c]);
+            }
+        }
+        if ($this->checkSequence($scope)) {
+            $won = true;
+        }
+
+        $scope = array();
+        for ($i = -3; $i <= 3; $i++) {
+            $r = $row + ($i * -1);
+            $c = $column + $i;
+            if ($r >= 0 && $r < $this->numRows && $c >= 0 && $c < $this->numColumns) {
+                array_push($scope, $currentBoard[$r][$c]);
+            }
+        }
+        if ($this->checkSequence($scope)) {
+            $won = true;
+        }
+
+        return $won;
+
+    }
+
+    function checkSequence($scope) {
+        $won = 0;
+        $countOne = 0;
+        $countTwo = 0;
+        for ($i = 0; $i < sizeof($scope); $i++) {
+            if ($scope[$i] == 1) {
+                $countOne++;
+                $countTwo = 0;
+            } else if ($scope[$i] == 1) {
+                $countTwo++;
+                $countOne = 0;
+            }
+            if ($countOne >= 4) {
+                $won = 1;
+            } else if ($countTwo >= 4) {
+                $won = 2;
+            }
+        }
+        return $won;
+    }
+
+    function checkTie($currentBoard) {
+        $tie = true;
+        for ($i = 0; $i < $this->numRows; $i++) {
+            for ($j = 0; $j < $this->numColumns; $j++) {
+                if ($currentBoard[$i][$j] == 0) {
+                    // table not yet full
+                    $tie = false;
+                }
+            }
+        }
+        return $tie;
     }
  	
  }

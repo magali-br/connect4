@@ -47,7 +47,8 @@
 						if (data && data.status=='success') {
 							var board = data.board;
 							if (board) {
-								drawBoard(board, data.isFirst, data.firstPlayerTurn);
+								drawBoard(board, data.isFirst, 
+									data.firstPlayerTurn, data.matchStatus);
 							}
 							//if other use played set currentPlayerTurn = true
 
@@ -85,6 +86,9 @@
 		else if ($status == "waiting")
 			echo "Waiting on " . $otherUser->login;
 	?>
+	</div>
+
+	<div id='turn'>
 	</div>
 
 	<div id='board'>

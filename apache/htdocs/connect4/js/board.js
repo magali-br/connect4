@@ -77,63 +77,70 @@ function drawGrid(board) {
 	}
 }
 
-function drawBoard(board, isFirst, firstPlayerTurn) {
+function drawBoard(board, isFirst, firstPlayerTurn, matchStatus) {
 	if (!currentBoard) {
 		initializeBoard(isFirst);
 	}
 	
 	drawGrid(board);
 
-	//$('#status').html("firstPlayerTurn " + firstPlayerTurn + " isFirst " + isFirst + "mouse "+ mousePosition);
-
-	isFirstPlayer = isFirst;
-	if (isFirstPlayer) {
-		tokenColour = "red";
-		playerNumber = 1;
-	} else {
-		tokenColour = "yellow";
-		playerNumber = 2;
-	}
-	// if (firstPlayerTurn) {
-	// 	$('#status').html("firstPlayerTurn is true");
-	// }
-
-	if (isFirstPlayer && firstPlayerTurn) {
-
-		$('#status').html("turn for you, one!");
-		currentPlayerTurn = true;
-	} else if (!isFirstPlayer && !firstPlayerTurn) {
-		currentPlayerTurn = true;
-
-		$('#status').html("turn for you ,two");
-	} else {
+	if (matchStatus == 2) {
+		if (isFirst) {
+			$('#status').html("You won!");
+		} else {
+			$('#status').html(otherUser + " won!");
+		}
 		currentPlayerTurn = false;
+		$('#turn').html("");
 
-		$('#status').html("not turn for you");
+	} else if (matchStatus == 3) {
+		if (isFirst) {
+			$('#status').html(otherUser + " won!");
+		} else {
+			$('#status').html("You won!");
+		}
+		currentPlayerTurn = false;
+		$('#turn').html("");
 
-	}
+	} else if (matchStatus == 4) {
+		$('#status').html("Tie - game over!");
+		currentPlayerTurn = false;
+		$('#turn').html("");
 
-	//$('#status').html(currentPlayerTurn.toString());
-	//$('#status').html(currentPlayerTurn.toString());
-	context.fillStyle = tokenColour;
-	if (mousePosition == -1) {
-		drawToken(context, context.canvas.width / 2, 15);
 	} else {
-		drawToken(context, mousePosition - tokenRadius, 15);
+
+		isFirstPlayer = isFirst;
+		if (isFirstPlayer) {
+			tokenColour = "red";
+			playerNumber = 1;
+		} else {
+			tokenColour = "yellow";
+			playerNumber = 2;
+		}
+
+		if (isFirstPlayer && firstPlayerTurn) {
+
+			$('#turn').html("It's your turn!");
+			currentPlayerTurn = true;
+		} else if (!isFirstPlayer && !firstPlayerTurn) {
+			currentPlayerTurn = true;
+
+			$('#turn').html("It's your turn!");
+		} else {
+			currentPlayerTurn = false;
+
+			$('#turn').html("Waiting for " + otherUser + " to play...");
+
+		}
+
+		context.fillStyle = tokenColour;
+		if (mousePosition == -1) {
+			drawToken(context, context.canvas.width / 2, 15);
+		} else {
+			drawToken(context, mousePosition - tokenRadius, 15);
+		}
+
 	}
-
-	$('#status').html("after " + currentPlayerTurn.toString());
-
-	//$('#status').html("firstPlayerTurn ");
-	//$('#status').html("firstPlayerTurn " + firstPlayerTurn);
-
-	// if (isFirstPlayer && firstPlayerTurn) {
-	// 	currentPlayerTurn = true;
-	// } else if (!isFirstPlayer && !firstPlayerTurn) {
-	// 	currentPlayerTurn = true;
-	// } else {
-	// 	currentPlayerTurn = false;
-	// }
 
 } 
 
@@ -198,12 +205,12 @@ function playInColumn(column) {
 			var canvas = $('canvas')[0];
 			var context = canvas.getContext("2d");
 			drawPlacedToken(context, column, row);
-			if (checkWin(row, column)) {
-				// do something
-			}
-			if (checkTie()) {
-				// do something
-			}
+			// if (checkWin(row, column)) {
+			// 	// do something
+			// }
+			// if (checkTie()) {
+			// 	// do something
+			// }
 
 			currentPlayerTurn = false;
 			sendBoard(row, column);
@@ -226,91 +233,91 @@ function sendBoard(row, column) {
 
 	var url = "sendBoard";
 	$.post(url, arguments, function (data,textStatus,jqXHR){
-			//alert(data);
+			//$('#status').html(data);
 		});
 	return false;
 }
 
-function checkWin(row, column) {
-	var count = 0;
+// function checkWin(row, column) {
+// 	var count = 0;
 
-	var won = true;
+// 	var won = true;
 
-	beginRow = Math.max(row - 3, 0);
-	endRow = Math.min(row + 3, rowCount - 1);
-	var scope = [];
-	for (var i = beginRow; i <= endRow; i++) {
-		scope.push(currentBoard[i][column]);
-	}
-	if (checkSequence(scope)) {
-		won = true;
-	}
+// 	beginRow = Math.max(row - 3, 0);
+// 	endRow = Math.min(row + 3, rowCount - 1);
+// 	var scope = [];
+// 	for (var i = beginRow; i <= endRow; i++) {
+// 		scope.push(currentBoard[i][column]);
+// 	}
+// 	if (checkSequence(scope)) {
+// 		won = true;
+// 	}
 
-	beginCol = Math.max(column - 3, 0);
-	endCol = Math.min(column + 3, columnCount - 1);
-	scope = [];
-	for (var i = beginCol; i <= endCol; i++) {
-		scope.push(currentBoard[row][i]);
-	}
-	if (checkSequence(scope)) {
-		won = true;
-	}
+// 	beginCol = Math.max(column - 3, 0);
+// 	endCol = Math.min(column + 3, columnCount - 1);
+// 	scope = [];
+// 	for (var i = beginCol; i <= endCol; i++) {
+// 		scope.push(currentBoard[row][i]);
+// 	}
+// 	if (checkSequence(scope)) {
+// 		won = true;
+// 	}
 
-	scope = [];
-	for (var i = -3; i <= 3; i++) {
-		r = row + i;
-		c = column + i;
-		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
-			scope.push(currentBoard[r][c]);
-		}
-	}
-	if (checkSequence(scope)) {
-		won = true;
-	}
+// 	scope = [];
+// 	for (var i = -3; i <= 3; i++) {
+// 		r = row + i;
+// 		c = column + i;
+// 		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
+// 			scope.push(currentBoard[r][c]);
+// 		}
+// 	}
+// 	if (checkSequence(scope)) {
+// 		won = true;
+// 	}
 
-	scope = [];
-	for (var i = -3; i <= 3; i++) {
-		r = row + (i * -1);
-		c = column + i;
-		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
-			scope.push(currentBoard[r][c]);
-		}
-	}
-	if (checkSequence(scope)) {
-		won = true;
-	}
+// 	scope = [];
+// 	for (var i = -3; i <= 3; i++) {
+// 		r = row + (i * -1);
+// 		c = column + i;
+// 		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
+// 			scope.push(currentBoard[r][c]);
+// 		}
+// 	}
+// 	if (checkSequence(scope)) {
+// 		won = true;
+// 	}
 
-	return won;
+// 	return won;
 
-}
+// }
 
-function checkSequence(scope) {
-	var won = false;
-	var count = 0;
-	for (var i = 0; i < scope.length; i++) {
-		if (scope[i] == playerNumber) {
-			count++;
-		} else {
-			count = 0;
-		}
-		if (count >= 4) {
-			alert("You win!");
-			won = true;
-			return won;
-		}
-	}
-	return won;
-}
+// function checkSequence(scope) {
+// 	var won = false;
+// 	var count = 0;
+// 	for (var i = 0; i < scope.length; i++) {
+// 		if (scope[i] == playerNumber) {
+// 			count++;
+// 		} else {
+// 			count = 0;
+// 		}
+// 		if (count >= 4) {
+// 			alert("You win!");
+// 			won = true;
+// 			return won;
+// 		}
+// 	}
+// 	return won;
+// }
 
-function checkTie() {
-	var tie = true;
-	for (var i = 0; i < rowCount; i++) {
-		for (var j = 0; j < columnCount; j++) {
-			if (currentBoard[i][j] == 0) {
-				// table not yet full
-				tie = false;
-			}
-		}
-	}
-	return tie;
-}
+// function checkTie() {
+// 	var tie = true;
+// 	for (var i = 0; i < rowCount; i++) {
+// 		for (var j = 0; j < columnCount; j++) {
+// 			if (currentBoard[i][j] == 0) {
+// 				// table not yet full
+// 				tie = false;
+// 			}
+// 		}
+// 	}
+// 	return tie;
+// }

@@ -1,8 +1,9 @@
 <?php
 class Match  {
 	const ACTIVE = 1;
-	const U1WON = 2;
-	const U2WON = 3;
+	const U1WIN = 2;
+	const U2WIN = 3;
+	const TIE = 4;
 	
 	public $id;
 	
