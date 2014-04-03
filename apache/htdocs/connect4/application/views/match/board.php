@@ -15,7 +15,7 @@
 		
 		$(function(){
 
-			$('body').everyTime(100,function(){
+			$('body').everyTime(1000,function(){
 
 					if (status == 'waiting') {
 						$.getJSON('<?= base_url() ?>arcade/checkInvitation',function(data, text, jqZHR){

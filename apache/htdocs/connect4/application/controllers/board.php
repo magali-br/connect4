@@ -192,12 +192,12 @@ class Board extends CI_Controller {
         $board[$row][$column] = $userNum;
         $board_state['board'] = $board;
 
-        $win = $this->checkWin($board, $row, $column);
-        if ($win == 1) {
+        $win = $this->checkWin($board, $row, $column, $userNum);
+        if ($win && ($userNum == 1)) {
 
             $this->match_model->updateStatus($match->id,Match::U1WIN);
 
-        } else if ($win == 2) {
+        } else if ($win && ($userNum == 2)) {
 
             $this->match_model->updateStatus($match->id,Match::U2WIN);
 
@@ -217,8 +217,8 @@ class Board extends CI_Controller {
         $serial_board = serialize($board_state);
         $this->match_model->updateBoard($match->id, $serial_board);
             
-        echo json_encode(array('status'=>'success win: ' .strval($win)));
-        //  echo json_encode(array('status'=>'success u1Val:  win: ' .strval($win)));
+        echo json_encode(array('status'=>'success win: ' 
+            .strval($win). ' usernum '.strval($userNum)));
          
         return;
         
@@ -280,7 +280,7 @@ class Board extends CI_Controller {
     }
 
 
-    function checkWin($currentBoard, $row, $column) {
+    function checkWin($currentBoard, $row, $column, $userNum) {
         $count = 0;
 
         $won = false;
@@ -292,7 +292,7 @@ class Board extends CI_Controller {
         for ($i = $beginRow; $i <= $endRow; $i++) {
             array_push($scope, $currentBoard[$i][$column]);
         }
-        if ($this->checkSequence($scope)) {
+        if ($this->checkSequence($scope, $userNum)) {
             $won = true;
         }
 
@@ -302,7 +302,7 @@ class Board extends CI_Controller {
         for ($i = $beginCol; $i <= $endCol; $i++) {
             array_push($scope, $currentBoard[$row][$i]);
         }
-        if ($this->checkSequence($scope)) {
+        if ($this->checkSequence($scope, $userNum)) {
             $won = true;
         }
 
@@ -315,7 +315,7 @@ class Board extends CI_Controller {
                 array_push($scope, $currentBoard[$r][$c]);
             }
         }
-        if ($this->checkSequence($scope)) {
+        if ($this->checkSequence($scope, $userNum)) {
             $won = true;
         }
 
@@ -327,7 +327,7 @@ class Board extends CI_Controller {
                 array_push($scope, $currentBoard[$r][$c]);
             }
         }
-        if ($this->checkSequence($scope)) {
+        if ($this->checkSequence($scope, $userNum)) {
             $won = true;
         }
 
@@ -335,25 +335,40 @@ class Board extends CI_Controller {
 
     }
 
-    function checkSequence($scope) {
-        $countOne = 0;
-        $countTwo = 0;
+    function checkSequence($scope, $userNum) {
+        $count = 0;
         for ($i = 0; $i < sizeof($scope); $i++) {
-            if ($scope[$i] == 1) {
-                $countOne++;
-                $countTwo = 0;
-            } else if ($scope[$i] == 2) {
-                $countTwo++;
-                $countOne = 0;
-            }
-            if ($countOne >= 4) {
-                return 1;
-            } else if ($countTwo >= 4) {
-                return 2;
+            if ($scope[$i] == $userNum) {
+                $count++;
+            } else if ($scope[$i] == 1) {
+                $count = 0;
+            } 
+            if ($count >= 4) {
+                return true;
             }
         }
-        return 0;
+        return false;
     }
+
+    // function checkSequence($scope, $userNum) {
+    //     $countOne = 0;
+    //     $countTwo = 0;
+    //     for ($i = 0; $i < sizeof($scope); $i++) {
+    //         if ($scope[$i] == 2) {
+    //             $countTwo++;
+    //             $countOne = 0;
+    //         } else if ($scope[$i] == 1) {
+    //             $countOne++;
+    //             $countTwo = 0;
+    //         } 
+    //         if ($countTwo >= 4) {
+    //             return 2;
+    //         } else if ($countOne >= 4) {
+    //             return 1;
+    //         }
+    //     }
+    //     return 0;
+    // }
 
     function checkTie($currentBoard) {
         $tie = true;

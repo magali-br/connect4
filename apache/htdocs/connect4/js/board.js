@@ -9,14 +9,16 @@ var columnCount = 7;
 var rowCount = 6;
 
 var currentBoard;
+var currentMatchStatus;
 var isFirstPlayer;
 var currentPlayerTurn;
+var doNotUpdate = false;
 
 var backgroundColour = '#D9D2C8';
 var gridColour = '#0F2C6E';
 
 function initializeBoard(isFirst) {
-	if (!currentBoard) {
+	if (!currentBoard && !$('canvas')[0]) {
 		var canvas = document.createElement("canvas");
 		canvas.setAttribute("id", "boardCanvas");
 
@@ -24,9 +26,6 @@ function initializeBoard(isFirst) {
 		canvas.setAttribute("height", 290);
 		canvas.setAttribute("tabindex", 1);
 
-		//Jquery creation of canvas - why doesn't work??
-		// var canvas = $('<canvas/>',{'id':'canvas'}).width(290).height(290);
-		//var canvas = $('<canvas/>').width(290).height(290);
 		$("#board").append(canvas);
 
 		document.onmousemove = mouseMoved;
@@ -62,9 +61,8 @@ function drawGrid(board) {
 	context.fillStyle = backgroundColour;
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
-	context.fillStyle = gridColour;//'#2C3539';
+	context.fillStyle = gridColour;
 	context.fillRect(0, 40, context.canvas.width, context.canvas.height);
-	currentBoard = board;
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[i].length; j++) {
 			if (board[i][j] == 1) {
@@ -96,11 +94,17 @@ function drawBoard(board, isFirst, firstPlayerTurn, matchStatus) {
 	if (!currentBoard) {
 		initializeBoard(isFirst);
 	}
+
+	if (doNotUpdate) {
+		return;
+	}
 	
-	drawGrid(board);
+	currentBoard = board;
+	drawGrid(currentBoard);
 
 	var msg = "";
 
+	currentMatchStatus = matchStatus;
 	if (matchStatus == 2) {
 		if (isFirst) {
 			msg = "You won!";
@@ -216,11 +220,13 @@ function playInColumn(column) {
 	for (var row = (currentBoard.length - 1); row >= 0; row--) {
 		if (currentBoard[row][column] == 0) {
 			currentBoard[row][column] = playerNumber;
+			drawBoard(currentBoard, isFirstPlayer, currentPlayerTurn, currentMatchStatus);
 			
 			played = true;
 			var canvas = $('canvas')[0];
 			var context = canvas.getContext("2d");
 			drawPlacedToken(context, column, row);
+			doNotUpdate = true;
 
 			currentPlayerTurn = false;
 			sendBoard(row, column);
@@ -243,91 +249,9 @@ function sendBoard(row, column) {
 
 	var url = "sendBoard";
 	$.post(url, arguments, function (data,textStatus,jqXHR){
-			//$('#status').html(data);
+			// alert(data);
+			doNotUpdate = false;
 		});
 	return false;
 }
 
-// function checkWin(row, column) {
-// 	var count = 0;
-
-// 	var won = true;
-
-// 	beginRow = Math.max(row - 3, 0);
-// 	endRow = Math.min(row + 3, rowCount - 1);
-// 	var scope = [];
-// 	for (var i = beginRow; i <= endRow; i++) {
-// 		scope.push(currentBoard[i][column]);
-// 	}
-// 	if (checkSequence(scope)) {
-// 		won = true;
-// 	}
-
-// 	beginCol = Math.max(column - 3, 0);
-// 	endCol = Math.min(column + 3, columnCount - 1);
-// 	scope = [];
-// 	for (var i = beginCol; i <= endCol; i++) {
-// 		scope.push(currentBoard[row][i]);
-// 	}
-// 	if (checkSequence(scope)) {
-// 		won = true;
-// 	}
-
-// 	scope = [];
-// 	for (var i = -3; i <= 3; i++) {
-// 		r = row + i;
-// 		c = column + i;
-// 		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
-// 			scope.push(currentBoard[r][c]);
-// 		}
-// 	}
-// 	if (checkSequence(scope)) {
-// 		won = true;
-// 	}
-
-// 	scope = [];
-// 	for (var i = -3; i <= 3; i++) {
-// 		r = row + (i * -1);
-// 		c = column + i;
-// 		if (r >= 0 && r < rowCount && c >= 0 && c < columnCount) {
-// 			scope.push(currentBoard[r][c]);
-// 		}
-// 	}
-// 	if (checkSequence(scope)) {
-// 		won = true;
-// 	}
-
-// 	return won;
-
-// }
-
-// function checkSequence(scope) {
-// 	var won = false;
-// 	var count = 0;
-// 	for (var i = 0; i < scope.length; i++) {
-// 		if (scope[i] == playerNumber) {
-// 			count++;
-// 		} else {
-// 			count = 0;
-// 		}
-// 		if (count >= 4) {
-// 			alert("You win!");
-// 			won = true;
-// 			return won;
-// 		}
-// 	}
-// 	return won;
-// }
-
-// function checkTie() {
-// 	var tie = true;
-// 	for (var i = 0; i < rowCount; i++) {
-// 		for (var j = 0; j < columnCount; j++) {
-// 			if (currentBoard[i][j] == 0) {
-// 				// table not yet full
-// 				tie = false;
-// 			}
-// 		}
-// 	}
-// 	return tie;
-// }

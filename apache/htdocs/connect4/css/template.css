@@ -24,6 +24,10 @@
  	color: blue;
  }
 
+ canvas {
+ 	outline: 0;
+ }
+
  #header{
     font-size:12px;
 	width: 700px;
