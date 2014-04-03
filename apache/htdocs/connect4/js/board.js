@@ -205,10 +205,25 @@ function mouseClicked(e) {
 	if (currentPlayerTurn) {
 		var canvas = $('canvas')[0];
 		var context = canvas.getContext("2d");
-	    mouseX = mousePosition;
+	    mouseX = mousePosition - tokenRadius;
 
-	    column = mouseX / (context.canvas.width / columnCount);
-	    playInColumn(Math.floor(column));
+	    var column = 6;
+	    if ((0 <= mouseX) && (mouseX < columnWidth)) {
+	    	column = 0;
+	    } else if ((columnWidth <= mouseX) && (mouseX < columnWidth * 2)) {
+	    	column = 1;
+	    }else if ((columnWidth * 2 <= mouseX) && (mouseX < columnWidth * 3)) {
+	    	column = 2;
+	    }else if ((columnWidth * 3 <= mouseX) && (mouseX < columnWidth * 4)) {
+	    	column = 3;
+	    } else if ((columnWidth * 4 <= mouseX) && (mouseX < columnWidth * 5)) {
+	    	column = 4;
+	    } else if ((columnWidth * 5 <= mouseX) && (mouseX < columnWidth * 6)) {
+	    	column = 5;
+	    } else {
+	    	column = 6;
+	    }
+	    playInColumn(column);
 	}
 
 }

@@ -184,10 +184,20 @@ class Board extends CI_Controller {
         }
 
         if ($isFirst) {
+            if (!$board_state['firstPlayerTurn']) {
+                $errormsg=  "Not current user's turn";
+                goto error;
+            }
             $userNum = 1;
         } else {
+            if ($board_state['firstPlayerTurn']) {
+                $errormsg=  "Not current user's turn";
+                goto error;
+            }
             $userNum = 2;
         }
+
+
         $board[$row][$column] = $userNum;
         $board_state['board'] = $board;
 
@@ -216,8 +226,7 @@ class Board extends CI_Controller {
         $serial_board = serialize($board_state);
         $this->match_model->updateBoard($match->id, $serial_board);
             
-        echo json_encode(array('status'=>'success win: ' 
-            .strval($win). ' usernum '.strval($userNum)));
+        echo json_encode(array('status'=>'success'));
          
         return;
         
