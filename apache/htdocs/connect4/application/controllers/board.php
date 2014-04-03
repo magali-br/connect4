@@ -133,7 +133,6 @@ class Board extends CI_Controller {
  			goto transactionerror;
  		}
  		
- 		// if all went well commit changes
  		$this->db->trans_commit();
  		
  		echo json_encode(array('status'=>'success','message'=>$msg));
@@ -349,26 +348,6 @@ class Board extends CI_Controller {
         }
         return false;
     }
-
-    // function checkSequence($scope, $userNum) {
-    //     $countOne = 0;
-    //     $countTwo = 0;
-    //     for ($i = 0; $i < sizeof($scope); $i++) {
-    //         if ($scope[$i] == 2) {
-    //             $countTwo++;
-    //             $countOne = 0;
-    //         } else if ($scope[$i] == 1) {
-    //             $countOne++;
-    //             $countTwo = 0;
-    //         } 
-    //         if ($countTwo >= 4) {
-    //             return 2;
-    //         } else if ($countOne >= 4) {
-    //             return 1;
-    //         }
-    //     }
-    //     return 0;
-    // }
 
     function checkTie($currentBoard) {
         $tie = true;

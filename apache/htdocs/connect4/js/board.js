@@ -159,7 +159,6 @@ function endGame(msg) {
 		$('#turn').html(msg);
 		$('#status').html("");
 
-		// update person's status in DB to available
 		alert(msg);
 		window.location.href = window.location.origin + "/connect4/arcade/finishGame"; 
 }
@@ -249,7 +248,7 @@ function sendBoard(row, column) {
 
 	var url = "sendBoard";
 	$.post(url, arguments, function (data,textStatus,jqXHR){
-			// alert(data);
+
 			doNotUpdate = false;
 		});
 	return false;
