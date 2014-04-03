@@ -46,24 +46,13 @@ class Account extends CI_Controller {
     			 
     			if (isset($user) && $user->comparePassword($clearPassword)) {
 
-    	// 			include_once $_SERVER['DOCUMENT_ROOT'] . '/connect4/securimage/securimage.php';
-					// $securimage = new Securimage();
-					// if ($securimage->check($_POST['captcha_code']) == false) {
-					// 	$data['errorMsg']='Your input does not match the image.';
-					// 	$data['title'] = 'Connect4 Login';
-	    //     			$data['main'] = 'account/loginForm.php';
-	    //     			$this->load->view('utils/template.php',$data);
-
-					// } else {
-
-
-	    				$_SESSION['user'] = $user;
-	    				$data['user']=$user;
-	    				
-	    				$this->user_model->updateStatus($user->id, User::AVAILABLE);
-	    				
-	    				redirect('arcade/index', 'refresh'); //redirect to the main application page
-	    			//}
+    				$_SESSION['user'] = $user;
+    				$data['user']=$user;
+    				
+    				$this->user_model->updateStatus($user->id, User::AVAILABLE);
+    				
+    				redirect('arcade/index', 'refresh'); //redirect to the main application page
+    				
     			} else {   			
 					$data['errorMsg']='Incorrect username or password!';
 					$data['title'] = 'Connect4 Login';

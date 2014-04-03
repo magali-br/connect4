@@ -13,42 +13,44 @@ var isFirstPlayer;
 var currentPlayerTurn;
 
 function initializeBoard(isFirst) {
-	var canvas = document.createElement("canvas");
-	canvas.setAttribute("id", "boardCanvas");
+	if (!currentBoard) {
+		var canvas = document.createElement("canvas");
+		canvas.setAttribute("id", "boardCanvas");
 
-	canvas.setAttribute("width", 290);
-	canvas.setAttribute("height", 290);
-	canvas.setAttribute("tabindex", 1);
+		canvas.setAttribute("width", 290);
+		canvas.setAttribute("height", 290);
+		canvas.setAttribute("tabindex", 1);
 
-	//Jquery creation of canvas - why doesn't work??
-	// var canvas = $('<canvas/>',{'id':'canvas'}).width(290).height(290);
-	//var canvas = $('<canvas/>').width(290).height(290);
-	$("#board").append(canvas);
+		//Jquery creation of canvas - why doesn't work??
+		// var canvas = $('<canvas/>',{'id':'canvas'}).width(290).height(290);
+		//var canvas = $('<canvas/>').width(290).height(290);
+		$("#board").append(canvas);
 
-	document.onmousemove = mouseMoved;
-	$("#board").mousemove(mouseMoved);
-	$("#board").click(mouseClicked);
-	if (isFirst) {
-		currentPlayerTurn = true;
-	} else {
-		currentPlayerTurn = false;
-	}
-
-	isFirstPlayer = isFirst;
-
-	var numRows = rowCount;
-	var numColumns = columnCount; 
-	board = [];
-	for (var i = 0; i < numRows; i++) {
-		row = [];
-		for (var j = 0; j < numColumns; j++) {
-			
-			row[j] = 0;
+		document.onmousemove = mouseMoved;
+		$("#board").mousemove(mouseMoved);
+		$("#board").click(mouseClicked);
+		if (isFirst) {
+			currentPlayerTurn = true;
+		} else {
+			currentPlayerTurn = false;
 		}
-		board[i] = row;
-	}
 
-	drawGrid(board);
+		isFirstPlayer = isFirst;
+
+		var numRows = rowCount;
+		var numColumns = columnCount; 
+		board = [];
+		for (var i = 0; i < numRows; i++) {
+			row = [];
+			for (var j = 0; j < numColumns; j++) {
+				
+				row[j] = 0;
+			}
+			board[i] = row;
+		}
+
+		drawGrid(board);
+	}
 }
 
 function drawGrid(board) {
@@ -84,29 +86,27 @@ function drawBoard(board, isFirst, firstPlayerTurn, matchStatus) {
 	
 	drawGrid(board);
 
+	var msg = "";
+
 	if (matchStatus == 2) {
 		if (isFirst) {
-			$('#status').html("You won!");
+			msg = "You won!";
 		} else {
-			$('#status').html(otherUser + " won!");
+			msg = otherUser + " won!";
 		}
-		currentPlayerTurn = false;
-		$('#turn').html("");
+		endGame(msg);
 
 	} else if (matchStatus == 3) {
 		if (isFirst) {
-			$('#status').html(otherUser + " won!");
+			msg = otherUser + " won!";
 		} else {
-			$('#status').html("You won!");
+			msg = "You won!";
 		}
-		currentPlayerTurn = false;
-		$('#turn').html("");
+		endGame(msg);
 
 	} else if (matchStatus == 4) {
-		$('#status').html("Tie - game over!");
-		currentPlayerTurn = false;
-		$('#turn').html("");
-
+		msg = "Tie - game over!";
+		endGame(msg);
 	} else {
 
 		isFirstPlayer = isFirst;
@@ -143,6 +143,16 @@ function drawBoard(board, isFirst, firstPlayerTurn, matchStatus) {
 	}
 
 } 
+
+function endGame(msg) {
+		currentPlayerTurn = false;
+		$('#turn').html(msg);
+		$('#status').html("");
+
+		// update person's status in DB to available
+		alert(msg + window.location.origin+ "/connect4/arcade/index");
+		window.location.href = window.location.origin + "/connect4/arcade/index"; 
+}
 
 function drawToken(context, x, y) {
 	context.beginPath();
