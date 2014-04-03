@@ -50,7 +50,6 @@
 								drawBoard(board, data.isFirst, 
 									data.firstPlayerTurn, data.matchStatus);
 							}
-							//if other use played set currentPlayerTurn = true
 
 						}
 					});

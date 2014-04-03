@@ -150,7 +150,7 @@ function endGame(msg) {
 		$('#status').html("");
 
 		// update person's status in DB to available
-		alert(msg + window.location.origin+ "/connect4/arcade/index");
+		alert(msg);
 		window.location.href = window.location.origin + "/connect4/arcade/finishGame"; 
 }
 
@@ -215,12 +215,6 @@ function playInColumn(column) {
 			var canvas = $('canvas')[0];
 			var context = canvas.getContext("2d");
 			drawPlacedToken(context, column, row);
-			// if (checkWin(row, column)) {
-			// 	// do something
-			// }
-			// if (checkTie()) {
-			// 	// do something
-			// }
 
 			currentPlayerTurn = false;
 			sendBoard(row, column);

@@ -336,24 +336,23 @@ class Board extends CI_Controller {
     }
 
     function checkSequence($scope) {
-        $won = 0;
         $countOne = 0;
         $countTwo = 0;
         for ($i = 0; $i < sizeof($scope); $i++) {
             if ($scope[$i] == 1) {
                 $countOne++;
                 $countTwo = 0;
-            } else if ($scope[$i] == 1) {
+            } else if ($scope[$i] == 2) {
                 $countTwo++;
                 $countOne = 0;
             }
             if ($countOne >= 4) {
-                $won = 1;
+                return 1;
             } else if ($countTwo >= 4) {
-                $won = 2;
+                return 2;
             }
         }
-        return $won;
+        return 0;
     }
 
     function checkTie($currentBoard) {
