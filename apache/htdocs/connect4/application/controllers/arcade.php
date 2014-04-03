@@ -267,6 +267,15 @@ class Arcade extends CI_Controller {
     	}
     		
     }
+
+    function finishGame() {
+
+		$this->load->model('user_model');
+		$user = $_SESSION['user'];
+		
+		$this->user_model->updateStatus($user->id, User::AVAILABLE);
+		redirect('arcade/index', 'refresh');
+    }
  
  }
 

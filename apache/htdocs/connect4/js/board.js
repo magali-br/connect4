@@ -151,7 +151,7 @@ function endGame(msg) {
 
 		// update person's status in DB to available
 		alert(msg + window.location.origin+ "/connect4/arcade/index");
-		window.location.href = window.location.origin + "/connect4/arcade/index"; 
+		window.location.href = window.location.origin + "/connect4/arcade/finishGame"; 
 }
 
 function drawToken(context, x, y) {
